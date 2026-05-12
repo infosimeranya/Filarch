@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Plugin — Filarch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--a:#2556b6;--ad:#1d4491;--ag:#2556b626;--B:#F8F4E8;--D:#EFE9D8;--S:#E6DFC8;--bo:#D4C8A8;--T:#2C2416;--M:#7D6A4E;--mu:#A89070;--sw:280px;--hh:64px;--toc-w:220px;--cw:900px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'JetBrains Mono',monospace;background:var(--B);color:var(--T);min-height:100vh;overflow-x:hidden}
+.h{position:fixed;top:0;left:0;right:0;height:var(--hh);background:#EFE9D8ee;backdrop-filter:blur(16px);border-bottom:1px solid var(--bo);display:flex;align-items:center;padding:0 1.5rem;z-index:100;gap:1rem}
+.hl{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1rem;color:var(--T);text-decoration:none}
+.hl:hover{opacity:.85}
+.hs{width:1px;height:24px;background:var(--bo);flex-shrink:0}
+.hr{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--M);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.body{display:flex;margin-top:var(--hh);min-height:calc(100vh - var(--hh))}
+.sb{position:fixed;top:var(--hh);left:0;bottom:0;width:var(--sw);background:var(--D);border-right:1px solid var(--bo);overflow-y:auto;padding:1.5rem 0}
+.sb::-webkit-scrollbar{width:4px}.sb::-webkit-scrollbar-thumb{background:var(--bo);border-radius:2px}
+.ss{padding:0 1rem;margin-bottom:.5rem}
+.sl{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);padding:0 .5rem;margin-bottom:.5rem;display:block}
+.si{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:var(--M);font-size:.88rem;cursor:pointer;transition:color .15s,background .15s;text-decoration:none;line-height:1.3}
+.si:hover{color:var(--T);background:rgba(0,0,0,.04)}
+.si.active{color:var(--a);background:var(--ag);font-weight:500}
+.sd{height:1px;background:var(--bo);margin:1rem}
+.ca{margin-left:var(--sw);flex:1;padding:3rem 4rem;max-width:calc(100% - var(--sw) - var(--toc-w));min-width:0}
+.cw{max-width:var(--cw)}
+.cr{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--mu);margin-bottom:2rem}
+.cr span{color:var(--M)}
+/* TOC right sidebar */
+.toc{position:fixed;top:var(--hh);right:0;bottom:0;width:var(--toc-w);padding:1.5rem .75rem;overflow-y:auto;border-left:1px solid var(--bo);background:var(--B)}
+.toc::-webkit-scrollbar{width:3px}.toc::-webkit-scrollbar-thumb{background:var(--bo);border-radius:2px}
+.toc-title{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:.75rem;display:block}
+.toc a{display:block;font-size:.78rem;color:var(--mu);text-decoration:none;padding:4px 8px;border-left:2px solid transparent;margin-bottom:2px;line-height:1.4;transition:color .15s,border-color .15s}
+.toc a:hover{color:var(--T)}
+.toc a.active{color:var(--a);border-left-color:var(--a);font-weight:500}
+.toc a.h2{padding-left:8px}
+.toc a.h3{padding-left:20px;font-size:.74rem}
+.toc a.h4{padding-left:32px;font-size:.72rem}
+.toc a.h5,.toc a.h6{padding-left:40px;font-size:.7rem}
+.md h1{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:2.2rem;letter-spacing:-.02em;margin-bottom:1rem;line-height:1.15;color:var(--T)}
+.md h2{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.4rem;margin-top:2.5rem;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--bo);color:var(--T)}
+.md h3{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:1.1rem;margin-top:2rem;margin-bottom:.5rem;color:var(--T)}
+.md h4,.md h5,.md h6{font-family:'JetBrains Mono',monospace;font-weight:600;margin-top:1.5rem;margin-bottom:.4rem;color:var(--T)}
+.md p{margin-bottom:1.1rem;line-height:1.75;color:#4A3828;font-size:.95rem}
+.md a{color:var(--a);text-decoration:none}.md a:hover{text-decoration:underline}
+.md ul,.md ol{padding-left:1.5rem;margin-bottom:1.1rem}
+.md li{line-height:1.75;color:#4A3828;font-size:.95rem;margin-bottom:.3rem}
+.md code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--S);border:1px solid var(--bo);border-radius:4px;padding:2px 7px;color:#8B4513}
+.md pre{background:var(--S);border:1px solid var(--bo);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin-bottom:1.5rem}
+.md pre code{background:transparent;border:none;padding:0;color:#3A5C2A;font-size:.85rem;line-height:1.7}
+.md blockquote{border-left:3px solid var(--a);padding:.75rem 1.25rem;margin:1.5rem 0;background:var(--ag);border-radius:0 8px 8px 0}
+.md blockquote p{color:var(--M);margin-bottom:0}
+.md table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.88rem}
+.md th{background:var(--S);font-family:'JetBrains Mono',monospace;font-weight:600;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;text-align:left;padding:10px 14px;border:1px solid var(--bo);color:var(--M)}
+.md td{padding:10px 14px;border:1px solid var(--bo);color:#4A3828;vertical-align:top}
+.md tr:hover td{background:rgba(0,0,0,.04)}
+.md img{max-width:100%;border-radius:8px;margin:1rem 0}
+.md hr{border:none;border-top:1px solid var(--bo);margin:2rem 0}
+.ft{margin-left:var(--sw);margin-right:var(--toc-w);padding:1.5rem 4rem;border-top:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:var(--mu)}
+.ft a{color:var(--a);text-decoration:none}
+.pg-badge{background:var(--S);border:1px solid var(--bo);border-radius:100px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--M)}
+@media(max-width:1024px){.toc{display:none}.ca{max-width:calc(100% - var(--sw))}}
+@media(max-width:768px){.sb{display:none}.toc{display:none}.ca,.ft{margin-left:0;margin-right:0;padding:2rem 1.5rem}}
+.mob-btn{display:none;background:none;border:none;color:var(--T);font-size:1.3rem;cursor:pointer;padding:4px 8px;line-height:1;flex-shrink:0;margin-right:2px}
+.sb-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:89}
+@media(max-width:768px){.mob-btn{display:block}.sb-ov.open{display:block}.sb.mob-open{display:block;z-index:90;box-shadow:4px 0 24px rgba(0,0,0,.5)}}
+.lang-sw{display:flex;gap:4px;flex-shrink:0;margin-left:8px}
+.ls-opt{font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:3px 8px;border-radius:6px;color:var(--M);text-decoration:none;border:1px solid var(--bo);transition:color .15s,border-color .15s;white-space:nowrap}
+.ls-opt:hover{color:var(--T);border-color:var(--a)}
+.ls-opt.active{color:var(--a);border-color:var(--a);font-weight:600;pointer-events:none}
+.ver-sw{position:relative;flex-shrink:0;margin-left:4px}
+.ver-badge{font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:3px 9px;border-radius:6px;color:var(--a);border:1px solid var(--a);cursor:pointer;white-space:nowrap;user-select:none;display:inline-block}
+.ver-badge:hover{background:var(--ag)}
+.ver-dd{display:none;position:absolute;top:calc(100% + 6px);right:0;background:var(--D);border:1px solid var(--bo);border-radius:8px;min-width:160px;z-index:300;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.ver-sw.open .ver-dd{display:block}
+.ver-opt{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;color:var(--T);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.78rem;gap:12px;border-bottom:1px solid var(--bo)}
+.ver-opt:last-child{border-bottom:none}
+.ver-opt:hover{background:var(--S)}
+.ver-opt.ver-cur{color:var(--a);font-weight:700}
+.ver-date{color:var(--mu);font-size:.7rem;margin-left:auto}
+.ver-latest{font-size:.62rem;padding:1px 5px;border-radius:4px;background:var(--ag);border:1px solid var(--a);color:var(--a);margin-right:6px;flex-shrink:0;opacity:.8}
+.ver-ann{margin:.2rem 0 .9rem;}
+.md h1,.md h2,.md h3,.md h4,.md h5,.md h6{color:#2a6093!important}
+.md p,.md li{color:#492727!important}
+.md pre code{color:#407d36!important}
+
+</style>
+</head>
+<body>
+<div id="sb-ov" class="sb-ov" onclick="toggleNav()"></div>
+<header class="h">
+  <button class="mob-btn" onclick="toggleNav()">&#9776;</button>
+  <a class="hl" href="../../index.html"><div style="width:28px;height:28px;background:#2556b6;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#fff;">F</div><span>Filarch</span></a>
+  <div class="hs"></div>
+  <div class="hr">Filarch</div>
+  
+  
+</header>
+<div class="body">
+  <nav class="sb"><div class="ss"><span class="sl">Filarch Sync/auth</span><a class="si" href="../../filarch-sync/auth/giris-login.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Giriş-Login</a></div><div class="ss"><span class="sl">Filarch Sync/features</span><a class="si" href="../../filarch-sync/features/cakisma-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Çakışma Yönetimi</a><a class="si" href="../../filarch-sync/features/dosya-versiyon-yorumlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Versiyon Yorumları</a><a class="si" href="../../filarch-sync/features/dosya-versiyonlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Versiyonları</a></div><div class="ss"><span class="sl">Filarch Sync/setup</span><a class="si" href="../../filarch-sync/setup/desteklenen-isletim-sistemleri.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Desteklenen İşletim Sistemleri</a><a class="si" href="../../filarch-sync/setup/guncelleme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Güncelleme</a><a class="si" href="../../filarch-sync/setup/kaldirma-uninstall.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>1. Servisi durdurun ve kaldırın</a><a class="si" href="../../filarch-sync/setup/kurulum.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Filarch Sync - Kurulum Kılavuzu</a></div><div class="ss"><span class="sl">Filarch Sync/support</span><a class="si" href="../../filarch-sync/support/destek-ve-geri-bildirim.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Destek ve Geri Bildirim</a><a class="si" href="../../filarch-sync/support/genel-tanim.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Genel Tanım</a><a class="si" href="../../filarch-sync/support/readme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Filarch Sync</a><a class="si" href="../../filarch-sync/support/sorun-giderme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Sorun Giderme</a><a class="si" href="../../filarch-sync/support/surum-bilgisi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Sürüm Bilgisi</a></div><div class="ss"><span class="sl">Filarch Sync/usage</span><a class="si" href="../../filarch-sync/usage/ana-ekran.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Ana Ekran</a><a class="si" href="../../filarch-sync/usage/ayarlar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Ayarlar</a><a class="si" href="../../filarch-sync/usage/hizli-kisayollar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Hızlı Kısayollar</a><a class="si" href="../../filarch-sync/usage/proje-lokal-klasor-eslestirme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Proje-Lokal Klasör Eşleştirme</a></div><div class="ss"><span class="sl">Plugin/auth</span><a class="si" href="../../plugin/auth/giris-ekrani.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Giriş Ekranı</a></div><div class="ss"><span class="sl">Plugin/collaboration</span><a class="si" href="../../plugin/collaboration/gercek-zamanli-isbirligi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Gerçek Zamanlı CAD İşbirliği</a><a class="si" href="../../plugin/collaboration/gorev-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Görev Yönetimi</a><a class="si" href="../../plugin/collaboration/toplanti-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Toplantı Yönetimi</a></div><div class="ss"><span class="sl">Plugin/core</span><a class="si" href="../../plugin/core/aktivite-gecmisi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Aktivite Geçmişi ve Denetim İzi</a><a class="si" href="../../plugin/core/ana-ekran.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Ana Ekran Tanıtımı</a><a class="si" href="../../plugin/core/arama.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Arama</a><a class="si" href="../../plugin/core/ayarlar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Ayarlar</a></div><div class="ss"><span class="sl">Plugin/files</span><a class="si" href="../../plugin/files/calisma-alani-ve-klasor-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Çalışma Alanı ve Klasör Yönetimi</a><a class="si" href="../../plugin/files/dosya-iliskileri.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosyalar Arası İlişkiler</a><a class="si" href="../../plugin/files/dosya-versiyonlama.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Versiyonlama</a><a class="si" href="../../plugin/files/etiket-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Etiket Yönetimi</a><a class="si" href="../../plugin/files/klasor-yeniden-adlandirma-ve-yetkilendirmeler.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Klasör Erişim Yönetimi</a></div><div class="ss"><span class="sl">Plugin/getting-started</span><a class="si" href="../../plugin/getting-started/desteklenen-programlar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Desteklenen Programlar</a><a class="si" href="../../plugin/getting-started/genel-tanim.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Genel Tanım</a><a class="si" href="../../plugin/getting-started/hizli-baslangic.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Hızlı Başlangıç (Quick Start)</a><a class="si" href="../../plugin/getting-started/kurulum.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Kurulum</a><a class="si" href="../../plugin/getting-started/plugini-kaldirma.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Plugini Kaldırma</a><a class="si active" href="../../plugin/getting-started/readme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Plugin</a></div><div class="ss"><span class="sl">Plugin/guides</span><a class="si" href="../../plugin/guides/filarch-plugin-kullanim-kilavuzu.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>📘 Kullanım Kılavuzu</a></div><div class="ss"><span class="sl">Web/authentication</span><a class="si" href="../../web/authentication/davetler.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Davetler (Invites)</a><a class="si" href="../../web/authentication/giris-yapma-kayit-olma.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Giriş Yapma ve Kayıt Olma</a><a class="si" href="../../web/authentication/profil.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Profil</a><a class="si" href="../../web/authentication/vekalet.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Vekalet</a></div><div class="ss"><span class="sl">Web/billing</span><a class="si" href="../../web/billing/odeme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Fiyatlandırma ve Ödeme</a></div><div class="ss"><span class="sl">Web/file-manager</span><a class="si" href="../../web/file-manager/depolama.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Depolama (Storages)</a><a class="si" href="../../web/file-manager/dosya-eskalasyonu.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Eskalasyonu</a><a class="si" href="../../web/file-manager/dosya-kurtarma.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Kurtarma (File Recovery)</a><a class="si" href="../../web/file-manager/dosya-yoneticisi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Yöneticisi</a><a class="si" href="../../web/file-manager/dosya.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya</a><a class="si" href="../../web/file-manager/etiketler.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Etiketler (Tags)</a><a class="si" href="../../web/file-manager/gelismis-arama.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Gelişmiş Arama Modülü</a><a class="si" href="../../web/file-manager/klasor.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Klasör</a></div><div class="ss"><span class="sl">Web/getting-started</span><a class="si" href="../../web/getting-started/hosgeldin.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Hoşgeldin</a><a class="si" href="../../web/getting-started/ilk-yapilacaklar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Temel Kurulum</a><a class="si" href="../../web/getting-started/kurulum.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Kurulum</a><a class="si" href="../../web/getting-started/lisans.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Lisans</a><a class="si" href="../../web/getting-started/readme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Web</a></div><div class="ss"><span class="sl">Web/meeting</span><a class="si" href="../../web/meeting/toplanti.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Toplantı</a></div><div class="ss"><span class="sl">Web/projects</span><a class="si" href="../../web/projects/calisma-alanlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Çalışma Alanları (Workspaces)</a><a class="si" href="../../web/projects/projeler.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Projeler (Projects)</a></div><div class="ss"><span class="sl">Web/settings</span><a class="si" href="../../web/settings/aktivite-gunlugu.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Aktivite Günlüğü (Activity Logs)</a><a class="si" href="../../web/settings/kontrol-paneli.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Kontrol Paneli</a><a class="si" href="../../web/settings/mail-sablonlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Mail Şablonları (Mail Templates)</a><a class="si" href="../../web/settings/simal.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>SimAl</a><a class="si" href="../../web/settings/webhooks.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Webhooks</a></div><div class="ss"><span class="sl">Web/tasks</span><a class="si" href="../../web/tasks/sablonlar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Şablonlar (Templates)</a><a class="si" href="../../web/tasks/task-ayarlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Görev Ayarları (Task Settings)</a><a class="si" href="../../web/tasks/task-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Görev Modülü</a></div><div class="ss"><span class="sl">Web/users</span><a class="si" href="../../web/users/kullanicilar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Kullanıcı Yönetimi</a><a class="si" href="../../web/users/roller.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Rol Yönetimi</a></div></nav>
+  <main class="ca">
+    <div class="cw">
+    <div class="cr"><span>Filarch</span> / Plugin/getting-started/README</div>
+    <div class="md" id="md-content"><h1>Plugin</h1>
+<ul>
+<li>Tech-Docs</li>
+<li>Gerçek Zamanlı İşbirliği</li>
+<li>Toplantı Yönetimi</li>
+<li>Görev Yönetimi</li>
+<li>Çalışma Alanı ve Klasör Yönetimi</li>
+<li>Klasör Yeniden Adlandırma ve Yetkilendirmeler</li>
+<li>Dosya İlişkileri</li>
+<li>Arama</li>
+<li>Etiket Yönetimi</li>
+<li>Dosya Versiyonlama</li>
+<li>Aktivite Geçmişi</li>
+<li>Hızlı Başlangıç</li>
+<li>FilArch Plugin - Kullanım Kılavuzu</li>
+<li>Genel Tanım</li>
+<li>Desteklenen Programlar</li>
+<li>Kurulum</li>
+<li>Giriş Ekranı</li>
+<li>Ana Ekran</li>
+<li>Plugini Kaldırma</li>
+<li>Ayarlar</li>
+</ul>
+</div>
+    </div>
+  </main>
+  <aside class="toc" id="toc">
+    <span class="toc-title">Bu Sayfada</span>
+  </aside>
+</div>
+<footer class="ft">
+  <span>Simeranya Dijital Teknoloji &mdash; <a href="https://simeranya.com.tr" target="_blank">simeranya.com.tr</a></span>
+</footer>
+<script>
+(function(){
+  function toggleNav(){var s=document.querySelector('.sb'),o=document.getElementById('sb-ov');s.classList.toggle('mob-open');o.classList.toggle('open');}
+  window.toggleNav=toggleNav;
+  document.addEventListener('click',function(e){var vsw=document.querySelector('.ver-sw');if(vsw&&!vsw.contains(e.target))vsw.classList.remove('open');});
+  document.querySelectorAll('.si').forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=768){toggleNav();}});});
+  var TC={added:'#4caf50',changed:'#ff9800',fixed:'#42a5f5',removed:'#ef5350',security:'#ab47bc'};
+  var TL={"added":"Eklendi","changed":"Değiştirildi","fixed":"Düzeltildi","removed":"Kaldırıldı","security":"Güvenlik"};
+  var VD={"versions":[],"hcl":{}};
+  function selectVer(v){
+    var vi=VD.versions.findIndex(function(x){return x.version===v;});
+    if(vi===-1)return;
+    var isLatest=(vi===0);
+    var badge=document.querySelector('.ver-badge');
+    if(badge)badge.textContent=(isLatest?'Latest':'v'+v)+' ▾';
+    document.querySelectorAll('.ver-opt').forEach(function(o){o.classList.toggle('ver-cur',o.dataset.ver===v);});
+    try{var sp=new URLSearchParams(location.search);sp.set('ver',v);history.replaceState({},'',(location.pathname||'.')+'?'+sp.toString());}catch(e){}
+    document.querySelectorAll('.si[href]').forEach(function(a){var h=a.getAttribute('href');if(!h||h==='#')return;var qi=h.indexOf('?');var hi=h.indexOf('#');var base=qi>=0?h.slice(0,qi):hi>=0?h.slice(0,hi):h;var hash=hi>=0?h.slice(hi):'';var qsp=new URLSearchParams(qi>=0?h.slice(qi+1,hi>=0?hi:undefined):'');qsp.set('ver',v);a.setAttribute('href',base+'?'+qsp.toString()+hash);});
+    // Changelog page: scroll to version block instead of annotation/filter logic
+    if(document.querySelector('.cl-ver')){
+      if(typeof clS==='function')clS(v);
+      else{var slug=v.replace(/[^a-z0-9]/gi,'-');var t=document.getElementById('ver-'+slug);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});}
+      return;
+    }
+    var mc=document.getElementById('md-content');
+    if(mc){Array.from(mc.children).forEach(function(el){el.style.display='';});}
+    document.querySelectorAll('.ver-ann').forEach(function(ann){
+      var ht=ann.dataset.h;var changes=VD.hcl[ht]||[];
+      while(ann.firstChild)ann.removeChild(ann.firstChild);
+      var toRender;
+      if(isLatest){
+        toRender=changes.map(function(c){return{c:c,future:false,past:false};});
+      } else {
+        var cur=changes.filter(function(c){return c.version===v;}).map(function(c){return{c:c,future:false,past:false};});
+        var fut=changes.filter(function(c){var ci=VD.versions.findIndex(function(x){return x.version===c.version;});return ci<vi;}).map(function(c){return{c:c,future:true,past:false};});
+        toRender=cur.concat(fut);
+        if(toRender.length===0){
+          toRender=changes.filter(function(c){var ci=VD.versions.findIndex(function(x){return x.version===c.version;});return ci>vi;}).map(function(c){return{c:c,future:false,past:true};});
+        }
+      }
+      if(toRender.length===0){ann.style.display='none';return;}
+      ann.style.display='';
+      var acc=document.createElement('div');
+      acc.setAttribute('style','border:1px solid var(--bo);border-radius:6px;overflow:hidden;margin:.1rem 0 .8rem;');
+      var hdr=document.createElement('div');
+      hdr.setAttribute('style','padding:.3rem .7rem;background:var(--S);cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;color:var(--mu);');
+      var arrow=document.createElement('span');arrow.textContent='▸';
+      var lbl=document.createElement('span');lbl.textContent='Changelog';
+      var cntSpan=document.createElement('span');
+      cntSpan.setAttribute('style','margin-left:auto;font-size:.65rem;font-weight:400;opacity:.7;');
+      cntSpan.textContent=toRender.length+' değişiklik';
+      hdr.appendChild(arrow);hdr.appendChild(lbl);hdr.appendChild(cntSpan);
+      var body=document.createElement('div');
+      body.setAttribute('style','padding:.4rem .7rem;display:none;flex-direction:column;gap:4px;');
+      hdr.onclick=function(){var op=body.style.display!=='none';body.style.display=op?'none':'flex';arrow.textContent=op?'▸':'▾';};
+      toRender.forEach(function(item){
+        var c=item.c;var color=TC[c.type]||'#888';
+        var row=document.createElement('div');
+        row.setAttribute('style','display:flex;align-items:baseline;gap:6px;font-size:.8rem;'+(item.future||item.past?'opacity:.55;':''));
+        if(item.future){
+          var fb=document.createElement('span');
+          fb.setAttribute('style','font-family:monospace;font-size:.62rem;padding:1px 5px;border-radius:5px;border:1px dashed #9ca3af;color:var(--mu);white-space:nowrap;flex-shrink:0;');
+          fb.textContent='⇨ v'+c.version+(c.date?' · '+c.date:'');row.appendChild(fb);
+        } else {
+          var vs=document.createElement('span');
+          vs.setAttribute('style','font-family:monospace;font-size:.68rem;color:var(--mu);flex-shrink:0;white-space:nowrap;');
+          vs.textContent='v'+c.version+(c.date?' · '+c.date:'');row.appendChild(vs);
+        }
+        var bdg=document.createElement('span');
+        bdg.setAttribute('style','font-size:.62rem;padding:1px 6px;border-radius:8px;background:'+color+'18;border:1px '+(item.future?'dashed':'solid')+' '+color+'50;color:'+color+';white-space:nowrap;flex-shrink:0;');
+        bdg.textContent=TL[c.type]||c.type;row.appendChild(bdg);
+        var txt=document.createElement('span');
+        txt.setAttribute('style','color:var(--M);font-size:.8rem;');
+        txt.textContent=c.text;row.appendChild(txt);
+        body.appendChild(row);
+      });
+      acc.appendChild(hdr);acc.appendChild(body);ann.appendChild(acc);
+    });
+    if(!mc||isLatest)return;
+    Array.from(mc.querySelectorAll('h1,h2,h3,h4')).forEach(function(h){
+      var ht=h.textContent.trim();var changes=VD.hcl[ht]||[];
+      var existed=changes.length===0||changes.some(function(c){var ci=VD.versions.findIndex(function(x){return x.version===c.version;});return ci>=vi;});
+      h.style.display=existed?'':'none';
+      var sib=h.nextElementSibling;
+      if(sib&&sib.classList&&sib.classList.contains('ver-ann')){if(!existed)sib.style.display='none';sib=sib.nextElementSibling;}
+      var lvl=parseInt(h.tagName[1]);
+      while(sib){if(sib.tagName&&/^H[1-4]$/.test(sib.tagName)&&parseInt(sib.tagName[1])<=lvl)break;sib.style.display=existed?'':'none';sib=sib.nextElementSibling;}
+    });
+  }
+  window.selectVer=selectVer;
+  if(VD.versions.length>0&&!document.querySelector('.cl-ver')){
+    var initVer=new URLSearchParams(location.search).get('ver');
+    var startVer=initVer&&VD.versions.find(function(x){return x.version===initVer;})?initVer:VD.versions[0].version;
+    selectVer(startVer);
+  }
+  var toc=document.getElementById('toc');
+  var md=document.getElementById('md-content');
+  if(!toc||!md)return;
+  var headings=md.querySelectorAll('h1,h2,h3,h4,h5,h6');
+  if(headings.length<2){toc.style.display='none';document.querySelector('.ca').style.maxWidth='calc(100% - var(--sw))';return;}
+  var links=[];
+  headings.forEach(function(h,i){
+    if(!h.id){h.id='heading-'+i;}
+    var a=document.createElement('a');
+    a.href='#'+h.id;
+    a.textContent=h.textContent;
+    a.className=h.tagName.toLowerCase();
+    a.dataset.target=h.id;
+    toc.appendChild(a);
+    links.push({el:a,target:h});
+  });
+  function updateActive(){
+    var scrollY=window.scrollY||window.pageYOffset;
+    var current=null;
+    links.forEach(function(l){
+      if(l.target.getBoundingClientRect().top<=100)current=l;
+    });
+    links.forEach(function(l){l.el.classList.remove('active');});
+    if(current)current.el.classList.add('active');
+  }
+  window.addEventListener('scroll',updateActive,{passive:true});
+  updateActive();
+})();
+</script>
+</body>
+</html>
