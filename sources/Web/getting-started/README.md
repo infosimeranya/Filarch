@@ -1,0 +1,32 @@
+# Web
+
+- Task Ayarları
+- İlk Yapılacaklar
+- Kontrol Paneli
+- Giriş Yapma/Kayıt Olma
+- Dosya Yöneticisi
+- Hoşgeldin
+- Kullanıcılar
+- Roller
+- Dosya Kurtarma
+- Mail Şablonları
+- Klasör
+- Aktivite Günlüğü
+- Projeler
+- Davetler
+- Gelişmiş Arama
+- Çalışma Alanları
+- Dosya
+- Etiketler
+- Şablonlar
+- Depolama
+- Vekalet
+- Toplantı
+- Ödeme
+- Lisans
+- SimAl
+- Profil
+- Kurulum
+- Webhooks
+- Dosya Eskalasyonu
+- Task Yönetimi

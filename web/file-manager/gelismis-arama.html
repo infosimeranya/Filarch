@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Gelişmiş Arama Modülü — Filarch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--a:#2556b6;--ad:#1d4491;--ag:#2556b626;--B:#F8F4E8;--D:#EFE9D8;--S:#E6DFC8;--bo:#D4C8A8;--T:#2C2416;--M:#7D6A4E;--mu:#A89070;--sw:280px;--hh:64px;--toc-w:220px;--cw:900px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'JetBrains Mono',monospace;background:var(--B);color:var(--T);min-height:100vh;overflow-x:hidden}
+.h{position:fixed;top:0;left:0;right:0;height:var(--hh);background:#EFE9D8ee;backdrop-filter:blur(16px);border-bottom:1px solid var(--bo);display:flex;align-items:center;padding:0 1.5rem;z-index:100;gap:1rem}
+.hl{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1rem;color:var(--T);text-decoration:none}
+.hl:hover{opacity:.85}
+.hs{width:1px;height:24px;background:var(--bo);flex-shrink:0}
+.hr{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--M);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.body{display:flex;margin-top:var(--hh);min-height:calc(100vh - var(--hh))}
+.sb{position:fixed;top:var(--hh);left:0;bottom:0;width:var(--sw);background:var(--D);border-right:1px solid var(--bo);overflow-y:auto;padding:1.5rem 0}
+.sb::-webkit-scrollbar{width:4px}.sb::-webkit-scrollbar-thumb{background:var(--bo);border-radius:2px}
+.ss{padding:0 1rem;margin-bottom:.5rem}
+.sl{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);padding:0 .5rem;margin-bottom:.5rem;display:block}
+.si{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:var(--M);font-size:.88rem;cursor:pointer;transition:color .15s,background .15s;text-decoration:none;line-height:1.3}
+.si:hover{color:var(--T);background:rgba(0,0,0,.04)}
+.si.active{color:var(--a);background:var(--ag);font-weight:500}
+.sd{height:1px;background:var(--bo);margin:1rem}
+.ca{margin-left:var(--sw);flex:1;padding:3rem 4rem;max-width:calc(100% - var(--sw) - var(--toc-w));min-width:0}
+.cw{max-width:var(--cw)}
+.cr{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--mu);margin-bottom:2rem}
+.cr span{color:var(--M)}
+/* TOC right sidebar */
+.toc{position:fixed;top:var(--hh);right:0;bottom:0;width:var(--toc-w);padding:1.5rem .75rem;overflow-y:auto;border-left:1px solid var(--bo);background:var(--B)}
+.toc::-webkit-scrollbar{width:3px}.toc::-webkit-scrollbar-thumb{background:var(--bo);border-radius:2px}
+.toc-title{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:.75rem;display:block}
+.toc a{display:block;font-size:.78rem;color:var(--mu);text-decoration:none;padding:4px 8px;border-left:2px solid transparent;margin-bottom:2px;line-height:1.4;transition:color .15s,border-color .15s}
+.toc a:hover{color:var(--T)}
+.toc a.active{color:var(--a);border-left-color:var(--a);font-weight:500}
+.toc a.h2{padding-left:8px}
+.toc a.h3{padding-left:20px;font-size:.74rem}
+.toc a.h4{padding-left:32px;font-size:.72rem}
+.toc a.h5,.toc a.h6{padding-left:40px;font-size:.7rem}
+.md h1{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:2.2rem;letter-spacing:-.02em;margin-bottom:1rem;line-height:1.15;color:var(--T)}
+.md h2{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.4rem;margin-top:2.5rem;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--bo);color:var(--T)}
+.md h3{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:1.1rem;margin-top:2rem;margin-bottom:.5rem;color:var(--T)}
+.md h4,.md h5,.md h6{font-family:'JetBrains Mono',monospace;font-weight:600;margin-top:1.5rem;margin-bottom:.4rem;color:var(--T)}
+.md p{margin-bottom:1.1rem;line-height:1.75;color:#4A3828;font-size:.95rem}
+.md a{color:var(--a);text-decoration:none}.md a:hover{text-decoration:underline}
+.md ul,.md ol{padding-left:1.5rem;margin-bottom:1.1rem}
+.md li{line-height:1.75;color:#4A3828;font-size:.95rem;margin-bottom:.3rem}
+.md code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--S);border:1px solid var(--bo);border-radius:4px;padding:2px 7px;color:#8B4513}
+.md pre{background:var(--S);border:1px solid var(--bo);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin-bottom:1.5rem}
+.md pre code{background:transparent;border:none;padding:0;color:#3A5C2A;font-size:.85rem;line-height:1.7}
+.md blockquote{border-left:3px solid var(--a);padding:.75rem 1.25rem;margin:1.5rem 0;background:var(--ag);border-radius:0 8px 8px 0}
+.md blockquote p{color:var(--M);margin-bottom:0}
+.md table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.88rem}
+.md th{background:var(--S);font-family:'JetBrains Mono',monospace;font-weight:600;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;text-align:left;padding:10px 14px;border:1px solid var(--bo);color:var(--M)}
+.md td{padding:10px 14px;border:1px solid var(--bo);color:#4A3828;vertical-align:top}
+.md tr:hover td{background:rgba(0,0,0,.04)}
+.md img{max-width:100%;border-radius:8px;margin:1rem 0}
+.md hr{border:none;border-top:1px solid var(--bo);margin:2rem 0}
+.ft{margin-left:var(--sw);margin-right:var(--toc-w);padding:1.5rem 4rem;border-top:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:var(--mu)}
+.ft a{color:var(--a);text-decoration:none}
+.pg-badge{background:var(--S);border:1px solid var(--bo);border-radius:100px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--M)}
+@media(max-width:1024px){.toc{display:none}.ca{max-width:calc(100% - var(--sw))}}
+@media(max-width:768px){.sb{display:none}.toc{display:none}.ca,.ft{margin-left:0;margin-right:0;padding:2rem 1.5rem}}
+.mob-btn{display:none;background:none;border:none;color:var(--T);font-size:1.3rem;cursor:pointer;padding:4px 8px;line-height:1;flex-shrink:0;margin-right:2px}
+.sb-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:89}
+@media(max-width:768px){.mob-btn{display:block}.sb-ov.open{display:block}.sb.mob-open{display:block;z-index:90;box-shadow:4px 0 24px rgba(0,0,0,.5)}}
+.lang-sw{display:flex;gap:4px;flex-shrink:0;margin-left:8px}
+.ls-opt{font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:3px 8px;border-radius:6px;color:var(--M);text-decoration:none;border:1px solid var(--bo);transition:color .15s,border-color .15s;white-space:nowrap}
+.ls-opt:hover{color:var(--T);border-color:var(--a)}
+.ls-opt.active{color:var(--a);border-color:var(--a);font-weight:600;pointer-events:none}
+.ver-sw{position:relative;flex-shrink:0;margin-left:4px}
+.ver-badge{font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:3px 9px;border-radius:6px;color:var(--a);border:1px solid var(--a);cursor:pointer;white-space:nowrap;user-select:none;display:inline-block}
+.ver-badge:hover{background:var(--ag)}
+.ver-dd{display:none;position:absolute;top:calc(100% + 6px);right:0;background:var(--D);border:1px solid var(--bo);border-radius:8px;min-width:160px;z-index:300;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.ver-sw.open .ver-dd{display:block}
+.ver-opt{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;color:var(--T);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.78rem;gap:12px;border-bottom:1px solid var(--bo)}
+.ver-opt:last-child{border-bottom:none}
+.ver-opt:hover{background:var(--S)}
+.ver-opt.ver-cur{color:var(--a);font-weight:700}
+.ver-date{color:var(--mu);font-size:.7rem;margin-left:auto}
+.ver-latest{font-size:.62rem;padding:1px 5px;border-radius:4px;background:var(--ag);border:1px solid var(--a);color:var(--a);margin-right:6px;flex-shrink:0;opacity:.8}
+.ver-ann{margin:.2rem 0 .9rem;}
+.md h1,.md h2,.md h3,.md h4,.md h5,.md h6{color:#2a6093!important}
+.md p,.md li{color:#492727!important}
+.md pre code{color:#407d36!important}
+
+</style>
+</head>
+<body>
+<div id="sb-ov" class="sb-ov" onclick="toggleNav()"></div>
+<header class="h">
+  <button class="mob-btn" onclick="toggleNav()">&#9776;</button>
+  <a class="hl" href="../../index.html"><div style="width:28px;height:28px;background:#2556b6;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#fff;">F</div><span>Filarch</span></a>
+  <div class="hs"></div>
+  <div class="hr">Filarch</div>
+  
+  
+</header>
+<div class="body">
+  <nav class="sb"><div class="ss"><span class="sl">Filarch Sync/auth</span><a class="si" href="../../filarch-sync/auth/giris-login.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Giriş-Login</a></div><div class="ss"><span class="sl">Filarch Sync/features</span><a class="si" href="../../filarch-sync/features/cakisma-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Çakışma Yönetimi</a><a class="si" href="../../filarch-sync/features/dosya-versiyon-yorumlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Versiyon Yorumları</a><a class="si" href="../../filarch-sync/features/dosya-versiyonlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Versiyonları</a></div><div class="ss"><span class="sl">Filarch Sync/setup</span><a class="si" href="../../filarch-sync/setup/desteklenen-isletim-sistemleri.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Desteklenen İşletim Sistemleri</a><a class="si" href="../../filarch-sync/setup/guncelleme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Güncelleme</a><a class="si" href="../../filarch-sync/setup/kaldirma-uninstall.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>1. Servisi durdurun ve kaldırın</a><a class="si" href="../../filarch-sync/setup/kurulum.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Filarch Sync - Kurulum Kılavuzu</a></div><div class="ss"><span class="sl">Filarch Sync/support</span><a class="si" href="../../filarch-sync/support/destek-ve-geri-bildirim.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Destek ve Geri Bildirim</a><a class="si" href="../../filarch-sync/support/genel-tanim.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Genel Tanım</a><a class="si" href="../../filarch-sync/support/readme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Filarch Sync</a><a class="si" href="../../filarch-sync/support/sorun-giderme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Sorun Giderme</a><a class="si" href="../../filarch-sync/support/surum-bilgisi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Sürüm Bilgisi</a></div><div class="ss"><span class="sl">Filarch Sync/usage</span><a class="si" href="../../filarch-sync/usage/ana-ekran.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Ana Ekran</a><a class="si" href="../../filarch-sync/usage/ayarlar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Ayarlar</a><a class="si" href="../../filarch-sync/usage/hizli-kisayollar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Hızlı Kısayollar</a><a class="si" href="../../filarch-sync/usage/proje-lokal-klasor-eslestirme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Proje-Lokal Klasör Eşleştirme</a></div><div class="ss"><span class="sl">Plugin/auth</span><a class="si" href="../../plugin/auth/giris-ekrani.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Giriş Ekranı</a></div><div class="ss"><span class="sl">Plugin/collaboration</span><a class="si" href="../../plugin/collaboration/gercek-zamanli-isbirligi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Gerçek Zamanlı CAD İşbirliği</a><a class="si" href="../../plugin/collaboration/gorev-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Görev Yönetimi</a><a class="si" href="../../plugin/collaboration/toplanti-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Toplantı Yönetimi</a></div><div class="ss"><span class="sl">Plugin/core</span><a class="si" href="../../plugin/core/aktivite-gecmisi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Aktivite Geçmişi ve Denetim İzi</a><a class="si" href="../../plugin/core/ana-ekran.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Ana Ekran Tanıtımı</a><a class="si" href="../../plugin/core/arama.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Arama</a><a class="si" href="../../plugin/core/ayarlar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Ayarlar</a></div><div class="ss"><span class="sl">Plugin/files</span><a class="si" href="../../plugin/files/calisma-alani-ve-klasor-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Çalışma Alanı ve Klasör Yönetimi</a><a class="si" href="../../plugin/files/dosya-iliskileri.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosyalar Arası İlişkiler</a><a class="si" href="../../plugin/files/dosya-versiyonlama.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Versiyonlama</a><a class="si" href="../../plugin/files/etiket-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Etiket Yönetimi</a><a class="si" href="../../plugin/files/klasor-yeniden-adlandirma-ve-yetkilendirmeler.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Klasör Erişim Yönetimi</a></div><div class="ss"><span class="sl">Plugin/getting-started</span><a class="si" href="../../plugin/getting-started/desteklenen-programlar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Desteklenen Programlar</a><a class="si" href="../../plugin/getting-started/genel-tanim.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Genel Tanım</a><a class="si" href="../../plugin/getting-started/hizli-baslangic.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Hızlı Başlangıç (Quick Start)</a><a class="si" href="../../plugin/getting-started/kurulum.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Kurulum</a><a class="si" href="../../plugin/getting-started/plugini-kaldirma.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Plugini Kaldırma</a><a class="si" href="../../plugin/getting-started/readme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Plugin</a></div><div class="ss"><span class="sl">Plugin/guides</span><a class="si" href="../../plugin/guides/filarch-plugin-kullanim-kilavuzu.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>📘 Kullanım Kılavuzu</a></div><div class="ss"><span class="sl">Web/authentication</span><a class="si" href="../../web/authentication/davetler.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Davetler (Invites)</a><a class="si" href="../../web/authentication/giris-yapma-kayit-olma.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Giriş Yapma ve Kayıt Olma</a><a class="si" href="../../web/authentication/profil.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Profil</a><a class="si" href="../../web/authentication/vekalet.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Vekalet</a></div><div class="ss"><span class="sl">Web/billing</span><a class="si" href="../../web/billing/odeme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Fiyatlandırma ve Ödeme</a></div><div class="ss"><span class="sl">Web/file-manager</span><a class="si" href="../../web/file-manager/depolama.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Depolama (Storages)</a><a class="si" href="../../web/file-manager/dosya-eskalasyonu.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Eskalasyonu</a><a class="si" href="../../web/file-manager/dosya-kurtarma.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Kurtarma (File Recovery)</a><a class="si" href="../../web/file-manager/dosya-yoneticisi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Yöneticisi</a><a class="si" href="../../web/file-manager/dosya.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya</a><a class="si" href="../../web/file-manager/etiketler.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Etiketler (Tags)</a><a class="si active" href="../../web/file-manager/gelismis-arama.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Gelişmiş Arama Modülü</a><a class="si" href="../../web/file-manager/klasor.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Klasör</a></div><div class="ss"><span class="sl">Web/getting-started</span><a class="si" href="../../web/getting-started/hosgeldin.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Hoşgeldin</a><a class="si" href="../../web/getting-started/ilk-yapilacaklar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Temel Kurulum</a><a class="si" href="../../web/getting-started/kurulum.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Kurulum</a><a class="si" href="../../web/getting-started/lisans.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Lisans</a><a class="si" href="../../web/getting-started/readme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Web</a></div><div class="ss"><span class="sl">Web/meeting</span><a class="si" href="../../web/meeting/toplanti.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Toplantı</a></div><div class="ss"><span class="sl">Web/projects</span><a class="si" href="../../web/projects/calisma-alanlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Çalışma Alanları (Workspaces)</a><a class="si" href="../../web/projects/projeler.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Projeler (Projects)</a></div><div class="ss"><span class="sl">Web/settings</span><a class="si" href="../../web/settings/aktivite-gunlugu.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Aktivite Günlüğü (Activity Logs)</a><a class="si" href="../../web/settings/kontrol-paneli.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Kontrol Paneli</a><a class="si" href="../../web/settings/mail-sablonlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Mail Şablonları (Mail Templates)</a><a class="si" href="../../web/settings/simal.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>SimAl</a><a class="si" href="../../web/settings/webhooks.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Webhooks</a></div><div class="ss"><span class="sl">Web/tasks</span><a class="si" href="../../web/tasks/sablonlar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Şablonlar (Templates)</a><a class="si" href="../../web/tasks/task-ayarlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Görev Ayarları (Task Settings)</a><a class="si" href="../../web/tasks/task-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Görev Modülü</a></div><div class="ss"><span class="sl">Web/users</span><a class="si" href="../../web/users/kullanicilar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Kullanıcı Yönetimi</a><a class="si" href="../../web/users/roller.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Rol Yönetimi</a></div></nav>
+  <main class="ca">
+    <div class="cw">
+    <div class="cr"><span>Filarch</span> / Web/file-manager/Gelişmiş Arama</div>
+    <div class="md" id="md-content"><h1>Gelişmiş Arama Modülü</h1>
+<p>Filarch&#39;ın Gelişmiş Arama Modülü, tüm namespace ve projeler genelinde dosya ve klasörleri tek ekrandan aratmanızı, çok boyutlu filtrelerle daraltmanızı ve sonuçlar üzerinde doğrudan işlem yapmanızı sağlar. Standart dosya yöneticisi navigasyonuna alternatif olarak, herhangi bir projeye gitmeden içerik bulmayı mümkün kılar.</p>
+<hr>
+<h2>İçindekiler</h2>
+<ol>
+<li><a href="#arama-%C3%A7ubu%C4%9Fu-ve-bulan%C4%B1k-arama">Arama Çubuğu ve Bulanık Arama</a></li>
+<li><a href="#filtre-paneli">Filtre Paneli</a><ul>
+<li><a href="#dosya-t%C3%BCr%C3%BC">Dosya Türü</a></li>
+<li><a href="#etiketler">Etiketler</a></li>
+<li><a href="#namespace">Namespace</a></li>
+<li><a href="#proje">Proje</a></li>
+<li><a href="#son-g%C3%BCncelleme">Son Güncelleme</a></li>
+<li><a href="#kullan%C4%B1c%C4%B1">Kullanıcı</a></li>
+<li><a href="#dosya-boyutu">Dosya Boyutu</a></li>
+<li><a href="#t%C3%BCm-filtreleri-uygula--temizle">Tüm Filtreleri Uygula / Temizle</a></li>
+</ul>
+</li>
+<li><a href="#sonu%C3%A7lar-tablosu">Sonuçlar Tablosu</a><ul>
+<li><a href="#s%C3%BCtunlar">Sütunlar</a></li>
+<li><a href="#s%C4%B1ralama">Sıralama</a></li>
+<li><a href="#e%C5%9Fle%C5%9Fme-detay%C4%B1-rozeti">Eşleşme Detayı Rozeti</a></li>
+<li><a href="#milestone-etiketi">Milestone Etiketi</a></li>
+<li><a href="#lisans-k%C4%B1s%C4%B1tlamas%C4%B1">Lisans Kısıtlaması</a></li>
+</ul>
+</li>
+<li><a href="#sat%C4%B1r-aksiyonlar%C4%B1">Satır Aksiyonları</a><ul>
+<li><a href="#g%C3%B6r%C3%BCnt%C3%BCle--klas%C3%B6re-git">Görüntüle / Klasöre Git</a></li>
+<li><a href="#i%CC%87ndir">İndir</a></li>
+<li><a href="#sil">Sil</a></li>
+</ul>
+</li>
+<li><a href="#sayfalama">Sayfalama</a></li>
+<li><a href="#url-ile-%C3%B6n-filtre">URL ile Ön Filtre</a></li>
+</ol>
+<hr>
+<h2>Arama Çubuğu ve Bulanık Arama</h2>
+<p>Sayfanın üst kısmında yer alan arama çubuğu, dosya ve klasör adlarında tam metin araması yapar. Arama metni yerel state&#39;te tutulur; <strong>Enter</strong> tuşuna veya &quot;Ara&quot; düğmesine basıldığında API çağrısı tetiklenir (her tuş vuruşunda arama yapılmaz).</p>
+<p><strong>Nasıl Kullanılır</strong></p>
+<ol>
+<li>Arama kutusuna aradığınız dosya/klasör adını yazın.</li>
+<li><strong>Enter</strong> tuşuna basın ya da sağdaki <strong>Ara</strong> düğmesine tıklayın.</li>
+<li>Sonuçlar anında tabloda güncellenir; her filtre değişikliğinde sayfa 1&#39;e döner.</li>
+</ol>
+<p><strong>Bulanık Arama (Trigram)</strong></p>
+<p>Arama çubuğunun hemen altında yer alan toggle, yazım yanlışlarını ve yakın eşleşmeleri tolere eden <strong>bulanık arama (Trigram)</strong> modunu açar. Aktif olduğunda toggle mavi renge döner.</p>
+<table>
+<thead>
+<tr>
+<th>Mod</th>
+<th>Davranış</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Kapalı (varsayılan)</td>
+<td>Tam metin eşleşmesi — daha hızlı, kesin sonuçlar</td>
+</tr>
+<tr>
+<td>Açık (Trigram)</td>
+<td>Benzerlik tabanlı eşleşme — yazım hatalarına karşı toleranslı</td>
+</tr>
+</tbody></table>
+<p>Toggle&#39;a tıklanır tıklanmaz arama otomatik olarak yeniden çalışır.</p>
+<p><img src="http://docs.filarch.com/media/uploads/01_search_bar.png" alt="Arama çubuğu ve bulanık arama toggle"><br><em>Şekil 1.0: Arama çubuğu, Ara düğmesi ve bulanık arama toggle</em></p>
+<hr>
+<h2>Filtre Paneli</h2>
+<p>Arama çubuğunun altında, sol bölümde <strong>Filtre Paneli</strong> yer alır. Her filtre bölümü bağımsız olarak daraltılıp genişletilebilir. Seçimler önce yerel &quot;bekleyen&quot; (pending) state&#39;e alınır; <strong>Uygula</strong> düğmesiyle veya panelin altındaki <strong>Tüm Filtreleri Uygula</strong> düğmesiyle API&#39;ye gönderilir. Her bölümde aktif filtre varsa bir <strong>Temizle</strong> bağlantısı belirir.</p>
+<p><img src="http://docs.filarch.com/media/uploads/02_filters_panel.png" alt="Filtre paneli genel görünüm"><br><em>Şekil 2.0: Filtre paneli — dosya türü, etiket, namespace, proje, son güncelleme, kullanıcı ve dosya boyutu bölümleri</em></p>
+<p><img src="http://docs.filarch.com/media/uploads/03_filters_panel.png" alt="Filtre paneli aktif filtreler"><br><em>Şekil 2.1: Aktif filtreler ve Uygula / Temizle bağlantıları</em></p>
+<hr>
+<h3>Dosya Türü</h3>
+<p>API&#39;den dönen <code>file_extensions</code> listesine göre dinamik olarak oluşturulur. Her seçeneğin yanında mevcut sonuç kümesindeki eşleşme sayısı gösterilir.</p>
+<p>Desteklenen özel değerler:</p>
+<table>
+<thead>
+<tr>
+<th>Değer</th>
+<th>Açıklama</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>folder</code></td>
+<td>Sadece klasörleri göster</td>
+</tr>
+<tr>
+<td><code>tag</code></td>
+<td>En az bir etikete sahip dosyaları göster</td>
+</tr>
+<tr>
+<td><code>.dwg</code>, <code>.pdf</code>, <code>.xlsx</code>, …</td>
+<td>Uzantıya göre filtrele</td>
+</tr>
+</tbody></table>
+<p>Birden fazla uzantı seçilebilir (çoklu checkbox). Seçim yapıldıktan sonra bölüm altındaki <strong>Uygula</strong> düğmesine tıklayın.</p>
+<hr>
+<h3>Etiketler</h3>
+<p>Projeye özgü etiketler (tags) varsa bu bölüm görünür. Her etiketin yanında mevcut sonuç kümesindeki eşleşme sayısı gösterilir. Birden fazla etiket seçilebilir.</p>
+<hr>
+<h3>Namespace</h3>
+<p>Kullanıcının erişimi olan tüm namespace&#39;ler listelenir. Namespace seçimi değiştiğinde Proje filtresi otomatik sıfırlanır (namespace → proje hiyerarşisi korunur). Birden fazla namespace seçilebilir.</p>
+<hr>
+<h3>Proje</h3>
+<p><strong>Yalnızca en az bir namespace seçildiğinde</strong> projeler görünür; listede sadece seçili namespace(ler)e ait projeler yer alır. Birden fazla proje seçilebilir.</p>
+<hr>
+<h3>Son Güncelleme</h3>
+<p>Dört sabit zaman aralığı radio-benzeri tek seçim olarak sunulur:</p>
+<table>
+<thead>
+<tr>
+<th>Seçenek</th>
+<th>Zaman Aralığı</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Son 1 Saat</td>
+<td><code>last_1_hour</code></td>
+</tr>
+<tr>
+<td>Son 24 Saat</td>
+<td><code>last_24_hours</code></td>
+</tr>
+<tr>
+<td>Son 7 Gün</td>
+<td><code>last_7_days</code></td>
+</tr>
+<tr>
+<td>Son 30 Gün</td>
+<td><code>last_30_days</code></td>
+</tr>
+</tbody></table>
+<p>Seçili seçenek tekrar tıklanarak devre dışı bırakılabilir.</p>
+<hr>
+<h3>Kullanıcı</h3>
+<p>Proje seçiliyse sadece o projedeki kullanıcılar listelenir; yalnızca namespace seçiliyse namespace kullanıcıları; hiçbiri seçilmemişse tüm kullanıcılar gösterilir. Kullanıcı isimleri <code>first_name + last_name</code> formatında; profil tamamlanmamışsa e-posta adresi görünür.</p>
+<hr>
+<h3>Dosya Boyutu</h3>
+<p>Minimum ve maksimum boyut (KB cinsinden) girilebilen iki sayısal alan. Alan doldurulduktan sonra <strong>Uygula</strong> düğmesine tıklayarak filtreyi devreye alın.</p>
+<hr>
+<h3>Tüm Filtreleri Uygula / Temizle</h3>
+<p>Filtrelerin altında sayfaya yapışık iki düğme bulunur:</p>
+<table>
+<thead>
+<tr>
+<th>Düğme</th>
+<th>İşlev</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Tüm Filtreleri Uygula</strong></td>
+<td>Bekleyen tüm filter seçimlerini tek seferde API&#39;ye gönderir</td>
+</tr>
+<tr>
+<td><strong>Tüm Filtreleri Temizle</strong></td>
+<td>Namespace ve Proje dahil tüm filtreleri sıfırlar, URL&#39;yi <code>/advanced-search</code>&#39;e döndürür</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Sonuçlar Tablosu</h2>
+<h3>Sütunlar</h3>
+<p>Sonuçlar yatay kaydırılabilir bir tabloda listelenir. Aksiyon sütunu sağ tarafa sabitlenmiştir (sticky), yatay kaydırmada her zaman görünür kalır.</p>
+<table>
+<thead>
+<tr>
+<th>Sütun</th>
+<th>İçerik</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Ad</strong></td>
+<td>Dosya/klasör simgesi + adı; fuzzy aramada eşleşme rozeti</td>
+</tr>
+<tr>
+<td><strong>Namespace</strong></td>
+<td>Öğenin ait olduğu namespace adı</td>
+</tr>
+<tr>
+<td><strong>Proje</strong></td>
+<td>Öğenin ait olduğu proje adı</td>
+</tr>
+<tr>
+<td><strong>Boyut</strong></td>
+<td>Dosya boyutu (KB / MB); klasörler için <code>—</code></td>
+</tr>
+<tr>
+<td><strong>Son Değişiklik</strong></td>
+<td><code>gg.aa.yyyy ss:dd</code> formatında yerel saate çevrilmiş tarih</td>
+</tr>
+<tr>
+<td><strong>Etiketler</strong></td>
+<td>Renkli badge&#39;ler; etiket yoksa <code>—</code></td>
+</tr>
+<tr>
+<td><strong>Aksiyonlar</strong></td>
+<td>İndir / Görüntüle / Sil ikon düğmeleri</td>
+</tr>
+</tbody></table>
+<p>Dosya simgeleri uzantıya göre otomatik seçilir (dwg, rvt, skp, rfa, pdf, xlsx, png, zip, psd vb.). Klasörler klasör simgesiyle gösterilir.</p>
+<p><img src="http://docs.filarch.com/media/uploads/03_results_table.png" alt="Sonuçlar tablosu genel görünüm — ad, etiket, aksiyon sütunları ve satır detayları"><br><em>Şekil 3.0: Sonuçlar tablosu — dosya simgesi, etiket badge&#39;leri, eşleşme rozeti ve aksiyon butonları</em></p>
+<hr>
+<h3>Sıralama</h3>
+<p>Tablonun üst çubuğunda iki açılır liste bulunur:</p>
+<ul>
+<li><strong>Sıralama Kriteri:</strong> Ad, Tarih, Boyut, Tür</li>
+<li><strong>Sıralama Yönü:</strong> Artan (asc), Azalan (desc)</li>
+</ul>
+<p>Seçim değiştirildiğinde liste anında yeniden sorgulanır ve sayfa 1&#39;e döner.</p>
+<hr>
+<h3>Eşleşme Detayı Rozeti</h3>
+<p>Bulanık arama (trigram) aktifken, her sonuç satırında dosya adının altında eşleşme rozeti görünür:</p>
+<table>
+<thead>
+<tr>
+<th>Alan</th>
+<th>Açıklama</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tip etiketi</td>
+<td><code>FUZZY</code> (mor) veya <code>EXACT</code> (mavi)</td>
+</tr>
+<tr>
+<td>Eşleşen kelime</td>
+<td>Orijinal metin tırnak içinde; uzun kelimeler kısaltılır</td>
+</tr>
+<tr>
+<td>Benzerlik yüzdesi</td>
+<td>Yeşil ≥ %90, Turuncu ≥ %70, Kırmızı &lt; %70</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Milestone Etiketi</h3>
+<p>Dosya <code>is_milestone: true</code> döndürdüğünde satırda yıldız simgesi (★) ve sarı &quot;Milestone&quot; badge&#39;i gösterilir.</p>
+<hr>
+<h3>Lisans Kısıtlaması</h3>
+<p>Kısıtlı öğelerde:</p>
+<ul>
+<li>Dosya simgesi %50 gri filtresi ve %60 opaklıkla soluklaşır.</li>
+<li>Satırın sol üstünde <strong>RestrictionBadge</strong> rozeti belirir.</li>
+<li>İndir ve Sil butonları devre dışı bırakılır (opaklık 0.5, cursor: not-allowed).</li>
+<li>İndir veya Sil butonuna tıklanırsa AlertModal ile uyarı gösterilir.</li>
+</ul>
+<hr>
+<h2>Satır Aksiyonları</h2>
+<p>Her satırın sağ tarafında üç aksiyon ikonu bulunur.</p>
+<h3>Görüntüle / Klasöre Git</h3>
+<ul>
+<li><strong>Dosya ise:</strong> Sağdan kayan FileDrawer açılır; dosya detayları, meta veriler ve versiyonlar görüntülenebilir.</li>
+<li><strong>Klasör ise:</strong> Dosya yöneticisinde ilgili klasöre <code>/file-manager/namespace/:nsId/project/:projId/folder/:folderId</code> URL&#39;siyle yönlendirilir.</li>
+</ul>
+<h3>İndir</h3>
+<ul>
+<li>Yalnızca <code>object_type === &quot;file&quot;</code> olan ve lisans kısıtı olmayan öğeler için aktiftir.</li>
+<li>İndirme sırasında simge dönen yükleyici animasyonuna döner, düğme devre dışı kalır.</li>
+<li>İndirme tamamlanınca tarayıcının standart dosya indirme mekanizması devreye girer.</li>
+</ul>
+<h3>Sil</h3>
+<ul>
+<li>Lisans kısıtı olmayan öğeler için aktiftir.</li>
+<li>Tıklandığında <strong>Silme Onay Modalı</strong> (DeleteConfirmModal) açılır.</li>
+<li>Onaylanınca API&#39;ye DELETE isteği gönderilir; başarılıysa sonuç listesi yenilenir.</li>
+</ul>
+<hr>
+<h2>Sayfalama</h2>
+<p>Tablonun altında pagination kontrolü bulunur:</p>
+<table>
+<thead>
+<tr>
+<th>Kontrol</th>
+<th>Açıklama</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>◀ / ▶</td>
+<td>Önceki / sonraki sayfaya git</td>
+</tr>
+<tr>
+<td>Sayfa numaraları</td>
+<td>İlk 5 sayfa + <code>...</code> + son sayfa gösterimi</td>
+</tr>
+<tr>
+<td>Sayfa başı kayıt</td>
+<td>Açılır listeden 20 / 40 / 60 seçimi</td>
+</tr>
+<tr>
+<td>Sonuç sayısı</td>
+<td><code>X–Y / Z sonuç gösteriliyor</code> formatında üst çubukta</td>
+</tr>
+</tbody></table>
+<p>Sayfa veya sayfa boyutu değiştiğinde sayfa başına otomatik kaydırma yapılır.</p>
+<hr>
+<h2>URL ile Ön Filtre</h2>
+<p>Gelişmiş Arama sayfası üç URL formatını destekler:</p>
+<table>
+<thead>
+<tr>
+<th>URL</th>
+<th>Davranış</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/advanced-search</code></td>
+<td>Filtresiz açılır</td>
+</tr>
+<tr>
+<td><code>/advanced-search/namespace/:namespaceId</code></td>
+<td>İlgili namespace önceden seçili açılır</td>
+</tr>
+<tr>
+<td><code>/advanced-search/project/:projectId</code></td>
+<td>İlgili proje önceden seçili açılır</td>
+</tr>
+</tbody></table>
+<p>Diğer modüllerden &quot;Bu namespace/projede ara&quot; bağlantılarıyla doğrudan ön filtreli arama açılabilir. Namespace veya proje filtresi silindiğinde URL de uygun rotaya geri döner.</p>
+<hr>
+<h2>Karşılaştırmalı Avantajlar</h2>
+<table>
+<thead>
+<tr>
+<th>Özellik</th>
+<th>Filarch</th>
+<th>Google Drive</th>
+<th>SharePoint</th>
+<th>Box</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Namespace + proje çapraz arama</td>
+<td>✅ Tek ekrandan</td>
+<td>❌ Drive bazlı</td>
+<td>❌ Site bazlı</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Bulanık / trigram arama</td>
+<td>✅ Toggle ile</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Eşleşme tipi + benzerlik skoru gösterimi</td>
+<td>✅ Rozet ile</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Etiket + uzantı + boyut + tarih kombinasyonu</td>
+<td>✅</td>
+<td>Kısmi</td>
+<td>Kısmi</td>
+<td>Kısmi</td>
+</tr>
+<tr>
+<td>Sonuç üzerinden doğrudan silme / indirme</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Lisans kısıtı entegrasyonu</td>
+<td>✅ Otomatik</td>
+<td>N/A</td>
+<td>N/A</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>URL ile ön filtre desteği</td>
+<td>✅</td>
+<td>❌</td>
+<td>❌</td>
+<td>❌</td>
+</tr>
+</tbody></table>
+</div>
+    </div>
+  </main>
+  <aside class="toc" id="toc">
+    <span class="toc-title">Bu Sayfada</span>
+  </aside>
+</div>
+<footer class="ft">
+  <span>Simeranya Dijital Teknoloji &mdash; <a href="https://simeranya.com.tr" target="_blank">simeranya.com.tr</a></span>
+</footer>
+<script>
+(function(){
+  function toggleNav(){var s=document.querySelector('.sb'),o=document.getElementById('sb-ov');s.classList.toggle('mob-open');o.classList.toggle('open');}
+  window.toggleNav=toggleNav;
+  document.addEventListener('click',function(e){var vsw=document.querySelector('.ver-sw');if(vsw&&!vsw.contains(e.target))vsw.classList.remove('open');});
+  document.querySelectorAll('.si').forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=768){toggleNav();}});});
+  var TC={added:'#4caf50',changed:'#ff9800',fixed:'#42a5f5',removed:'#ef5350',security:'#ab47bc'};
+  var TL={"added":"Eklendi","changed":"Değiştirildi","fixed":"Düzeltildi","removed":"Kaldırıldı","security":"Güvenlik"};
+  var VD={"versions":[],"hcl":{}};
+  function selectVer(v){
+    var vi=VD.versions.findIndex(function(x){return x.version===v;});
+    if(vi===-1)return;
+    var isLatest=(vi===0);
+    var badge=document.querySelector('.ver-badge');
+    if(badge)badge.textContent=(isLatest?'Latest':'v'+v)+' ▾';
+    document.querySelectorAll('.ver-opt').forEach(function(o){o.classList.toggle('ver-cur',o.dataset.ver===v);});
+    try{var sp=new URLSearchParams(location.search);sp.set('ver',v);history.replaceState({},'',(location.pathname||'.')+'?'+sp.toString());}catch(e){}
+    document.querySelectorAll('.si[href]').forEach(function(a){var h=a.getAttribute('href');if(!h||h==='#')return;var qi=h.indexOf('?');var hi=h.indexOf('#');var base=qi>=0?h.slice(0,qi):hi>=0?h.slice(0,hi):h;var hash=hi>=0?h.slice(hi):'';var qsp=new URLSearchParams(qi>=0?h.slice(qi+1,hi>=0?hi:undefined):'');qsp.set('ver',v);a.setAttribute('href',base+'?'+qsp.toString()+hash);});
+    // Changelog page: scroll to version block instead of annotation/filter logic
+    if(document.querySelector('.cl-ver')){
+      if(typeof clS==='function')clS(v);
+      else{var slug=v.replace(/[^a-z0-9]/gi,'-');var t=document.getElementById('ver-'+slug);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});}
+      return;
+    }
+    var mc=document.getElementById('md-content');
+    if(mc){Array.from(mc.children).forEach(function(el){el.style.display='';});}
+    document.querySelectorAll('.ver-ann').forEach(function(ann){
+      var ht=ann.dataset.h;var changes=VD.hcl[ht]||[];
+      while(ann.firstChild)ann.removeChild(ann.firstChild);
+      var toRender;
+      if(isLatest){
+        toRender=changes.map(function(c){return{c:c,future:false,past:false};});
+      } else {
+        var cur=changes.filter(function(c){return c.version===v;}).map(function(c){return{c:c,future:false,past:false};});
+        var fut=changes.filter(function(c){var ci=VD.versions.findIndex(function(x){return x.version===c.version;});return ci<vi;}).map(function(c){return{c:c,future:true,past:false};});
+        toRender=cur.concat(fut);
+        if(toRender.length===0){
+          toRender=changes.filter(function(c){var ci=VD.versions.findIndex(function(x){return x.version===c.version;});return ci>vi;}).map(function(c){return{c:c,future:false,past:true};});
+        }
+      }
+      if(toRender.length===0){ann.style.display='none';return;}
+      ann.style.display='';
+      var acc=document.createElement('div');
+      acc.setAttribute('style','border:1px solid var(--bo);border-radius:6px;overflow:hidden;margin:.1rem 0 .8rem;');
+      var hdr=document.createElement('div');
+      hdr.setAttribute('style','padding:.3rem .7rem;background:var(--S);cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;color:var(--mu);');
+      var arrow=document.createElement('span');arrow.textContent='▸';
+      var lbl=document.createElement('span');lbl.textContent='Changelog';
+      var cntSpan=document.createElement('span');
+      cntSpan.setAttribute('style','margin-left:auto;font-size:.65rem;font-weight:400;opacity:.7;');
+      cntSpan.textContent=toRender.length+' değişiklik';
+      hdr.appendChild(arrow);hdr.appendChild(lbl);hdr.appendChild(cntSpan);
+      var body=document.createElement('div');
+      body.setAttribute('style','padding:.4rem .7rem;display:none;flex-direction:column;gap:4px;');
+      hdr.onclick=function(){var op=body.style.display!=='none';body.style.display=op?'none':'flex';arrow.textContent=op?'▸':'▾';};
+      toRender.forEach(function(item){
+        var c=item.c;var color=TC[c.type]||'#888';
+        var row=document.createElement('div');
+        row.setAttribute('style','display:flex;align-items:baseline;gap:6px;font-size:.8rem;'+(item.future||item.past?'opacity:.55;':''));
+        if(item.future){
+          var fb=document.createElement('span');
+          fb.setAttribute('style','font-family:monospace;font-size:.62rem;padding:1px 5px;border-radius:5px;border:1px dashed #9ca3af;color:var(--mu);white-space:nowrap;flex-shrink:0;');
+          fb.textContent='⇨ v'+c.version+(c.date?' · '+c.date:'');row.appendChild(fb);
+        } else {
+          var vs=document.createElement('span');
+          vs.setAttribute('style','font-family:monospace;font-size:.68rem;color:var(--mu);flex-shrink:0;white-space:nowrap;');
+          vs.textContent='v'+c.version+(c.date?' · '+c.date:'');row.appendChild(vs);
+        }
+        var bdg=document.createElement('span');
+        bdg.setAttribute('style','font-size:.62rem;padding:1px 6px;border-radius:8px;background:'+color+'18;border:1px '+(item.future?'dashed':'solid')+' '+color+'50;color:'+color+';white-space:nowrap;flex-shrink:0;');
+        bdg.textContent=TL[c.type]||c.type;row.appendChild(bdg);
+        var txt=document.createElement('span');
+        txt.setAttribute('style','color:var(--M);font-size:.8rem;');
+        txt.textContent=c.text;row.appendChild(txt);
+        body.appendChild(row);
+      });
+      acc.appendChild(hdr);acc.appendChild(body);ann.appendChild(acc);
+    });
+    if(!mc||isLatest)return;
+    Array.from(mc.querySelectorAll('h1,h2,h3,h4')).forEach(function(h){
+      var ht=h.textContent.trim();var changes=VD.hcl[ht]||[];
+      var existed=changes.length===0||changes.some(function(c){var ci=VD.versions.findIndex(function(x){return x.version===c.version;});return ci>=vi;});
+      h.style.display=existed?'':'none';
+      var sib=h.nextElementSibling;
+      if(sib&&sib.classList&&sib.classList.contains('ver-ann')){if(!existed)sib.style.display='none';sib=sib.nextElementSibling;}
+      var lvl=parseInt(h.tagName[1]);
+      while(sib){if(sib.tagName&&/^H[1-4]$/.test(sib.tagName)&&parseInt(sib.tagName[1])<=lvl)break;sib.style.display=existed?'':'none';sib=sib.nextElementSibling;}
+    });
+  }
+  window.selectVer=selectVer;
+  if(VD.versions.length>0&&!document.querySelector('.cl-ver')){
+    var initVer=new URLSearchParams(location.search).get('ver');
+    var startVer=initVer&&VD.versions.find(function(x){return x.version===initVer;})?initVer:VD.versions[0].version;
+    selectVer(startVer);
+  }
+  var toc=document.getElementById('toc');
+  var md=document.getElementById('md-content');
+  if(!toc||!md)return;
+  var headings=md.querySelectorAll('h1,h2,h3,h4,h5,h6');
+  if(headings.length<2){toc.style.display='none';document.querySelector('.ca').style.maxWidth='calc(100% - var(--sw))';return;}
+  var links=[];
+  headings.forEach(function(h,i){
+    if(!h.id){h.id='heading-'+i;}
+    var a=document.createElement('a');
+    a.href='#'+h.id;
+    a.textContent=h.textContent;
+    a.className=h.tagName.toLowerCase();
+    a.dataset.target=h.id;
+    toc.appendChild(a);
+    links.push({el:a,target:h});
+  });
+  function updateActive(){
+    var scrollY=window.scrollY||window.pageYOffset;
+    var current=null;
+    links.forEach(function(l){
+      if(l.target.getBoundingClientRect().top<=100)current=l;
+    });
+    links.forEach(function(l){l.el.classList.remove('active');});
+    if(current)current.el.classList.add('active');
+  }
+  window.addEventListener('scroll',updateActive,{passive:true});
+  updateActive();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Plugin
+
+- Tech-Docs
+- Gerçek Zamanlı İşbirliği
+- Toplantı Yönetimi
+- Görev Yönetimi
+- Çalışma Alanı ve Klasör Yönetimi
+- Klasör Yeniden Adlandırma ve Yetkilendirmeler
+- Dosya İlişkileri
+- Arama
+- Etiket Yönetimi
+- Dosya Versiyonlama
+- Aktivite Geçmişi
+- Hızlı Başlangıç
+- FilArch Plugin - Kullanım Kılavuzu
+- Genel Tanım
+- Desteklenen Programlar
+- Kurulum
+- Giriş Ekranı
+- Ana Ekran
+- Plugini Kaldırma
+- Ayarlar

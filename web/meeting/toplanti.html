@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Toplantı — Filarch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--a:#2556b6;--ad:#1d4491;--ag:#2556b626;--B:#F8F4E8;--D:#EFE9D8;--S:#E6DFC8;--bo:#D4C8A8;--T:#2C2416;--M:#7D6A4E;--mu:#A89070;--sw:280px;--hh:64px;--toc-w:220px;--cw:900px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'JetBrains Mono',monospace;background:var(--B);color:var(--T);min-height:100vh;overflow-x:hidden}
+.h{position:fixed;top:0;left:0;right:0;height:var(--hh);background:#EFE9D8ee;backdrop-filter:blur(16px);border-bottom:1px solid var(--bo);display:flex;align-items:center;padding:0 1.5rem;z-index:100;gap:1rem}
+.hl{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1rem;color:var(--T);text-decoration:none}
+.hl:hover{opacity:.85}
+.hs{width:1px;height:24px;background:var(--bo);flex-shrink:0}
+.hr{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--M);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.body{display:flex;margin-top:var(--hh);min-height:calc(100vh - var(--hh))}
+.sb{position:fixed;top:var(--hh);left:0;bottom:0;width:var(--sw);background:var(--D);border-right:1px solid var(--bo);overflow-y:auto;padding:1.5rem 0}
+.sb::-webkit-scrollbar{width:4px}.sb::-webkit-scrollbar-thumb{background:var(--bo);border-radius:2px}
+.ss{padding:0 1rem;margin-bottom:.5rem}
+.sl{font-family:'JetBrains Mono',monospace;font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);padding:0 .5rem;margin-bottom:.5rem;display:block}
+.si{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;color:var(--M);font-size:.88rem;cursor:pointer;transition:color .15s,background .15s;text-decoration:none;line-height:1.3}
+.si:hover{color:var(--T);background:rgba(0,0,0,.04)}
+.si.active{color:var(--a);background:var(--ag);font-weight:500}
+.sd{height:1px;background:var(--bo);margin:1rem}
+.ca{margin-left:var(--sw);flex:1;padding:3rem 4rem;max-width:calc(100% - var(--sw) - var(--toc-w));min-width:0}
+.cw{max-width:var(--cw)}
+.cr{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--mu);margin-bottom:2rem}
+.cr span{color:var(--M)}
+/* TOC right sidebar */
+.toc{position:fixed;top:var(--hh);right:0;bottom:0;width:var(--toc-w);padding:1.5rem .75rem;overflow-y:auto;border-left:1px solid var(--bo);background:var(--B)}
+.toc::-webkit-scrollbar{width:3px}.toc::-webkit-scrollbar-thumb{background:var(--bo);border-radius:2px}
+.toc-title{font-family:'JetBrains Mono',monospace;font-size:.65rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);margin-bottom:.75rem;display:block}
+.toc a{display:block;font-size:.78rem;color:var(--mu);text-decoration:none;padding:4px 8px;border-left:2px solid transparent;margin-bottom:2px;line-height:1.4;transition:color .15s,border-color .15s}
+.toc a:hover{color:var(--T)}
+.toc a.active{color:var(--a);border-left-color:var(--a);font-weight:500}
+.toc a.h2{padding-left:8px}
+.toc a.h3{padding-left:20px;font-size:.74rem}
+.toc a.h4{padding-left:32px;font-size:.72rem}
+.toc a.h5,.toc a.h6{padding-left:40px;font-size:.7rem}
+.md h1{font-family:'JetBrains Mono',monospace;font-weight:800;font-size:2.2rem;letter-spacing:-.02em;margin-bottom:1rem;line-height:1.15;color:var(--T)}
+.md h2{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.4rem;margin-top:2.5rem;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--bo);color:var(--T)}
+.md h3{font-family:'JetBrains Mono',monospace;font-weight:600;font-size:1.1rem;margin-top:2rem;margin-bottom:.5rem;color:var(--T)}
+.md h4,.md h5,.md h6{font-family:'JetBrains Mono',monospace;font-weight:600;margin-top:1.5rem;margin-bottom:.4rem;color:var(--T)}
+.md p{margin-bottom:1.1rem;line-height:1.75;color:#4A3828;font-size:.95rem}
+.md a{color:var(--a);text-decoration:none}.md a:hover{text-decoration:underline}
+.md ul,.md ol{padding-left:1.5rem;margin-bottom:1.1rem}
+.md li{line-height:1.75;color:#4A3828;font-size:.95rem;margin-bottom:.3rem}
+.md code{font-family:'JetBrains Mono',monospace;font-size:.82rem;background:var(--S);border:1px solid var(--bo);border-radius:4px;padding:2px 7px;color:#8B4513}
+.md pre{background:var(--S);border:1px solid var(--bo);border-radius:10px;padding:1.25rem 1.5rem;overflow-x:auto;margin-bottom:1.5rem}
+.md pre code{background:transparent;border:none;padding:0;color:#3A5C2A;font-size:.85rem;line-height:1.7}
+.md blockquote{border-left:3px solid var(--a);padding:.75rem 1.25rem;margin:1.5rem 0;background:var(--ag);border-radius:0 8px 8px 0}
+.md blockquote p{color:var(--M);margin-bottom:0}
+.md table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:.88rem}
+.md th{background:var(--S);font-family:'JetBrains Mono',monospace;font-weight:600;font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;text-align:left;padding:10px 14px;border:1px solid var(--bo);color:var(--M)}
+.md td{padding:10px 14px;border:1px solid var(--bo);color:#4A3828;vertical-align:top}
+.md tr:hover td{background:rgba(0,0,0,.04)}
+.md img{max-width:100%;border-radius:8px;margin:1rem 0}
+.md hr{border:none;border-top:1px solid var(--bo);margin:2rem 0}
+.ft{margin-left:var(--sw);margin-right:var(--toc-w);padding:1.5rem 4rem;border-top:1px solid var(--bo);display:flex;align-items:center;justify-content:space-between;font-size:.78rem;color:var(--mu)}
+.ft a{color:var(--a);text-decoration:none}
+.pg-badge{background:var(--S);border:1px solid var(--bo);border-radius:100px;padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--M)}
+@media(max-width:1024px){.toc{display:none}.ca{max-width:calc(100% - var(--sw))}}
+@media(max-width:768px){.sb{display:none}.toc{display:none}.ca,.ft{margin-left:0;margin-right:0;padding:2rem 1.5rem}}
+.mob-btn{display:none;background:none;border:none;color:var(--T);font-size:1.3rem;cursor:pointer;padding:4px 8px;line-height:1;flex-shrink:0;margin-right:2px}
+.sb-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:89}
+@media(max-width:768px){.mob-btn{display:block}.sb-ov.open{display:block}.sb.mob-open{display:block;z-index:90;box-shadow:4px 0 24px rgba(0,0,0,.5)}}
+.lang-sw{display:flex;gap:4px;flex-shrink:0;margin-left:8px}
+.ls-opt{font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:3px 8px;border-radius:6px;color:var(--M);text-decoration:none;border:1px solid var(--bo);transition:color .15s,border-color .15s;white-space:nowrap}
+.ls-opt:hover{color:var(--T);border-color:var(--a)}
+.ls-opt.active{color:var(--a);border-color:var(--a);font-weight:600;pointer-events:none}
+.ver-sw{position:relative;flex-shrink:0;margin-left:4px}
+.ver-badge{font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:3px 9px;border-radius:6px;color:var(--a);border:1px solid var(--a);cursor:pointer;white-space:nowrap;user-select:none;display:inline-block}
+.ver-badge:hover{background:var(--ag)}
+.ver-dd{display:none;position:absolute;top:calc(100% + 6px);right:0;background:var(--D);border:1px solid var(--bo);border-radius:8px;min-width:160px;z-index:300;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.ver-sw.open .ver-dd{display:block}
+.ver-opt{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;color:var(--T);text-decoration:none;font-family:'JetBrains Mono',monospace;font-size:.78rem;gap:12px;border-bottom:1px solid var(--bo)}
+.ver-opt:last-child{border-bottom:none}
+.ver-opt:hover{background:var(--S)}
+.ver-opt.ver-cur{color:var(--a);font-weight:700}
+.ver-date{color:var(--mu);font-size:.7rem;margin-left:auto}
+.ver-latest{font-size:.62rem;padding:1px 5px;border-radius:4px;background:var(--ag);border:1px solid var(--a);color:var(--a);margin-right:6px;flex-shrink:0;opacity:.8}
+.ver-ann{margin:.2rem 0 .9rem;}
+.md h1,.md h2,.md h3,.md h4,.md h5,.md h6{color:#2a6093!important}
+.md p,.md li{color:#492727!important}
+.md pre code{color:#407d36!important}
+
+</style>
+</head>
+<body>
+<div id="sb-ov" class="sb-ov" onclick="toggleNav()"></div>
+<header class="h">
+  <button class="mob-btn" onclick="toggleNav()">&#9776;</button>
+  <a class="hl" href="../../index.html"><div style="width:28px;height:28px;background:#2556b6;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:#fff;">F</div><span>Filarch</span></a>
+  <div class="hs"></div>
+  <div class="hr">Filarch</div>
+  
+  
+</header>
+<div class="body">
+  <nav class="sb"><div class="ss"><span class="sl">Filarch Sync/auth</span><a class="si" href="../../filarch-sync/auth/giris-login.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Giriş-Login</a></div><div class="ss"><span class="sl">Filarch Sync/features</span><a class="si" href="../../filarch-sync/features/cakisma-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Çakışma Yönetimi</a><a class="si" href="../../filarch-sync/features/dosya-versiyon-yorumlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Versiyon Yorumları</a><a class="si" href="../../filarch-sync/features/dosya-versiyonlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Versiyonları</a></div><div class="ss"><span class="sl">Filarch Sync/setup</span><a class="si" href="../../filarch-sync/setup/desteklenen-isletim-sistemleri.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Desteklenen İşletim Sistemleri</a><a class="si" href="../../filarch-sync/setup/guncelleme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Güncelleme</a><a class="si" href="../../filarch-sync/setup/kaldirma-uninstall.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>1. Servisi durdurun ve kaldırın</a><a class="si" href="../../filarch-sync/setup/kurulum.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Filarch Sync - Kurulum Kılavuzu</a></div><div class="ss"><span class="sl">Filarch Sync/support</span><a class="si" href="../../filarch-sync/support/destek-ve-geri-bildirim.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Destek ve Geri Bildirim</a><a class="si" href="../../filarch-sync/support/genel-tanim.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Genel Tanım</a><a class="si" href="../../filarch-sync/support/readme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Filarch Sync</a><a class="si" href="../../filarch-sync/support/sorun-giderme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Sorun Giderme</a><a class="si" href="../../filarch-sync/support/surum-bilgisi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Sürüm Bilgisi</a></div><div class="ss"><span class="sl">Filarch Sync/usage</span><a class="si" href="../../filarch-sync/usage/ana-ekran.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Ana Ekran</a><a class="si" href="../../filarch-sync/usage/ayarlar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Ayarlar</a><a class="si" href="../../filarch-sync/usage/hizli-kisayollar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Hızlı Kısayollar</a><a class="si" href="../../filarch-sync/usage/proje-lokal-klasor-eslestirme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Proje-Lokal Klasör Eşleştirme</a></div><div class="ss"><span class="sl">Plugin/auth</span><a class="si" href="../../plugin/auth/giris-ekrani.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Giriş Ekranı</a></div><div class="ss"><span class="sl">Plugin/collaboration</span><a class="si" href="../../plugin/collaboration/gercek-zamanli-isbirligi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Gerçek Zamanlı CAD İşbirliği</a><a class="si" href="../../plugin/collaboration/gorev-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Görev Yönetimi</a><a class="si" href="../../plugin/collaboration/toplanti-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Toplantı Yönetimi</a></div><div class="ss"><span class="sl">Plugin/core</span><a class="si" href="../../plugin/core/aktivite-gecmisi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Aktivite Geçmişi ve Denetim İzi</a><a class="si" href="../../plugin/core/ana-ekran.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Ana Ekran Tanıtımı</a><a class="si" href="../../plugin/core/arama.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Arama</a><a class="si" href="../../plugin/core/ayarlar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Ayarlar</a></div><div class="ss"><span class="sl">Plugin/files</span><a class="si" href="../../plugin/files/calisma-alani-ve-klasor-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Çalışma Alanı ve Klasör Yönetimi</a><a class="si" href="../../plugin/files/dosya-iliskileri.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosyalar Arası İlişkiler</a><a class="si" href="../../plugin/files/dosya-versiyonlama.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Versiyonlama</a><a class="si" href="../../plugin/files/etiket-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Etiket Yönetimi</a><a class="si" href="../../plugin/files/klasor-yeniden-adlandirma-ve-yetkilendirmeler.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Klasör Erişim Yönetimi</a></div><div class="ss"><span class="sl">Plugin/getting-started</span><a class="si" href="../../plugin/getting-started/desteklenen-programlar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Desteklenen Programlar</a><a class="si" href="../../plugin/getting-started/genel-tanim.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Genel Tanım</a><a class="si" href="../../plugin/getting-started/hizli-baslangic.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Hızlı Başlangıç (Quick Start)</a><a class="si" href="../../plugin/getting-started/kurulum.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Kurulum</a><a class="si" href="../../plugin/getting-started/plugini-kaldirma.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Plugini Kaldırma</a><a class="si" href="../../plugin/getting-started/readme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Plugin</a></div><div class="ss"><span class="sl">Plugin/guides</span><a class="si" href="../../plugin/guides/filarch-plugin-kullanim-kilavuzu.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>📘 Kullanım Kılavuzu</a></div><div class="ss"><span class="sl">Web/authentication</span><a class="si" href="../../web/authentication/davetler.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Davetler (Invites)</a><a class="si" href="../../web/authentication/giris-yapma-kayit-olma.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Giriş Yapma ve Kayıt Olma</a><a class="si" href="../../web/authentication/profil.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Profil</a><a class="si" href="../../web/authentication/vekalet.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Vekalet</a></div><div class="ss"><span class="sl">Web/billing</span><a class="si" href="../../web/billing/odeme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Fiyatlandırma ve Ödeme</a></div><div class="ss"><span class="sl">Web/file-manager</span><a class="si" href="../../web/file-manager/depolama.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Depolama (Storages)</a><a class="si" href="../../web/file-manager/dosya-eskalasyonu.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Eskalasyonu</a><a class="si" href="../../web/file-manager/dosya-kurtarma.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Kurtarma (File Recovery)</a><a class="si" href="../../web/file-manager/dosya-yoneticisi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya Yöneticisi</a><a class="si" href="../../web/file-manager/dosya.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Dosya</a><a class="si" href="../../web/file-manager/etiketler.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Etiketler (Tags)</a><a class="si" href="../../web/file-manager/gelismis-arama.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Gelişmiş Arama Modülü</a><a class="si" href="../../web/file-manager/klasor.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Klasör</a></div><div class="ss"><span class="sl">Web/getting-started</span><a class="si" href="../../web/getting-started/hosgeldin.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Hoşgeldin</a><a class="si" href="../../web/getting-started/ilk-yapilacaklar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Temel Kurulum</a><a class="si" href="../../web/getting-started/kurulum.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Kurulum</a><a class="si" href="../../web/getting-started/lisans.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Lisans</a><a class="si" href="../../web/getting-started/readme.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Web</a></div><div class="ss"><span class="sl">Web/meeting</span><a class="si active" href="../../web/meeting/toplanti.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Toplantı</a></div><div class="ss"><span class="sl">Web/projects</span><a class="si" href="../../web/projects/calisma-alanlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Çalışma Alanları (Workspaces)</a><a class="si" href="../../web/projects/projeler.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Projeler (Projects)</a></div><div class="ss"><span class="sl">Web/settings</span><a class="si" href="../../web/settings/aktivite-gunlugu.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Aktivite Günlüğü (Activity Logs)</a><a class="si" href="../../web/settings/kontrol-paneli.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Kontrol Paneli</a><a class="si" href="../../web/settings/mail-sablonlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Mail Şablonları (Mail Templates)</a><a class="si" href="../../web/settings/simal.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>SimAl</a><a class="si" href="../../web/settings/webhooks.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Webhooks</a></div><div class="ss"><span class="sl">Web/tasks</span><a class="si" href="../../web/tasks/sablonlar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Şablonlar (Templates)</a><a class="si" href="../../web/tasks/task-ayarlari.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Görev Ayarları (Task Settings)</a><a class="si" href="../../web/tasks/task-yonetimi.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Görev Modülü</a></div><div class="ss"><span class="sl">Web/users</span><a class="si" href="../../web/users/kullanicilar.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Kullanıcı Yönetimi</a><a class="si" href="../../web/users/roller.html"><span style="opacity:.5;font-size:.75rem;flex-shrink:0">&#9656;</span>Rol Yönetimi</a></div></nav>
+  <main class="ca">
+    <div class="cw">
+    <div class="cr"><span>Filarch</span> / Web/meeting/Toplantı</div>
+    <div class="md" id="md-content"><h1>Toplantı</h1>
+<h2>1. Toplantılar</h2>
+<p><img src="https://i.hizliresim.com/i6z7aqf.png" alt="meetings"> Şekil 1.1 – Toplantılar Ana Sayfası</p>
+<p>Kullanıcı, sol menüde yer alan Toplantılar bağlantısına tıkladığında toplantılar sayfasına yönlendirilir.<br>Sayfanın üst kısmında bulunan Toplantı Oluştur butonu ile yeni toplantı oluşturma ekranına geçilebilir.</p>
+<p>Toplantılar sayfası üç sekmeden oluşur:</p>
+<ul>
+<li>Takvim</li>
+<li>Toplantı Kararlarım</li>
+<li>Toplantı Eylemlerim</li>
+</ul>
+<h3>a. Takvim</h3>
+<p><img src="https://i.hizliresim.com/i6z7aqf.png" alt="meetings"> Şekil 1.2 – Takvim Görünümü</p>
+<p>Takvim sekmesinde, kullanıcının katılımcısı olduğu tüm toplantılar takvim görünümü üzerinden görüntülenir.</p>
+<p>Kullanıcı:</p>
+<ul>
+<li>Günler arasında geçiş yapabilir</li>
+<li>Gün, hafta veya ay görünümünü seçebilir</li>
+</ul>
+<p><img src="https://i.hizliresim.com/rl23tby.png" alt="meeting_detail_modal"> Şekil 1.3 – Toplantı Detay Penceresi (Takvim Üzerinden)</p>
+<p>Kullanıcı takvimde yer alan bir toplantıya tıkladığında, toplantı detaylarını gösteren bir pencere açılır.</p>
+<p>Bu pencerede:</p>
+<ul>
+<li>Toplantı başlığı görüntülenir</li>
+<li>Toplantının yapılacağı uygulamaya (Google Meet, Zoom vb.) gidilebilir</li>
+<li>Toplantı detay sayfasına geçilebilir</li>
+<li>Toplantı güncellenebilir</li>
+<li>Toplantı silinebilir</li>
+<li>Toplantının PDF çıktısı alınabilir</li>
+<li>Menü kapatılabilir</li>
+</ul>
+<p>Detay alanında toplantıya ait aşağıdaki bilgiler yer alır:</p>
+<ul>
+<li><strong>Proje:</strong> Toplantının hangi proje için yapıldığını gösterir.</li>
+<li><strong>Tarih:</strong> Toplantının yapılacağı tarihi ifade eder.</li>
+<li><strong>Saat:</strong> Toplantının başlangıç ve bitiş saatlerini gösterir.</li>
+<li><strong>Periyot:</strong> oplantının kaç günde bir tekrar edeceğini ve hangi tarihe kadar süreceğini belirtir.</li>
+<li><strong>Başkan:</strong> Toplantıyı yöneten kullanıcıdır.</li>
+<li><strong>Raportör:</strong> Toplantı notlarını tutan kullanıcıdır.</li>
+<li><strong>Toplantı Türü:</strong> Toplantının uzaktan, yüz yüze veya hibrit olup olmadığını gösterir.</li>
+<li><strong>Konum:</strong> Toplantının yapılacağı adresi ifade eder.</li>
+<li><strong>Durum:</strong> Toplantının katılım durumunu gösterir. Açık, kapalı, beklemede, iptal edildi veya tamamlandı değerlerini alabilir.</li>
+<li><strong>Katılımcılar:</strong> Toplantıya katılan kullanıcılar tabloda listelenir.</li>
+<li><strong>Toplantı Konuları:</strong> Toplantıda ele alınacak konular tabloda gösterilir.</li>
+</ul>
+<h3>b. Toplantı Konularım</h3>
+<p><img src="https://i.hizliresim.com/9tpui3j.png" alt="my_meeting_decisions"> Şekil 1.4 – Toplantı Konularım Sekmesi</p>
+<p>Bu sekmede kullanıcının farklı toplantılardan kendisine atanan toplantı kararları tabloda listelenir. Tabloda kararlar aranabilir veya kararın ait olduğu toplantının detay sayfasına gidilebilir. Tablodaki bilgiler:</p>
+<ul>
+<li><strong>Toplantı:</strong> Kararın ait olduğu toplantıdır.</li>
+<li><strong>Başlık:</strong> Kararın başlığıdır.</li>
+<li><strong>Obje:</strong> Kararın hangi proje, klasör veya dosya üzerine ait olduğunu ifade eder.</li>
+<li><strong>Takipçi:</strong> Kararın takipçi kullanıcısını ifade eder. Bu sekme için takipçi, mevcut kullanıcıdır.</li>
+<li><strong>Açıklama:</strong> Kararın açıklamasıdır.</li>
+</ul>
+<h3>c. Toplantı Eylemlerim</h3>
+<p><img src="https://i.hizliresim.com/n72qqjc.png" alt="my_meeting_action_items"> Şekil 1.5 – Toplantı Eylemlerim Sekmesi</p>
+<p>Bu sekmede kullanıcının farklı toplantılardan kendisine atanan toplantı eylemleri tabloda listelenir. Tabloda eylemler aranabilir veya eylemin ait olduğu toplantının detay sayfasına gidilebilir. Tablodaki bilgiler:</p>
+<ul>
+<li><strong>Toplantı:</strong> Eylemin ait olduğu toplantıdır.</li>
+<li><strong>Obje:</strong> Eylemin hangi proje, klasör veya dosya üzerine ait olduğunu ifade eder.</li>
+<li><strong>Sorumlu:</strong> Eylemin sorumlu kullanıcısını ifade eder. Bu sekme için sorumlu, mevcut kullanıcıdır.</li>
+<li><strong>Notlar:</strong> Eylemin notlarıdır.</li>
+<li><strong>Durum:</strong> Eylemin durumunu belirtir. Açık, kapalı, beklemede, iptal edildi ve tamamlandı değerlerini alabilir.</li>
+</ul>
+<hr>
+<h2>2. Toplantı Oluştur</h2>
+<p><img src="https://i.hizliresim.com/985chvo.png" alt="create_meeting"> Şekil 1.6 – Toplantı Oluşturma Ekranı</p>
+<p>Toplantı Oluştur sayfası, yeni bir toplantı tanımlamak ve planlamak için kullanılır.<br>Bu sayfada toplantıya ait tüm bilgiler bir form aracılığıyla girilir.</p>
+<p>Formda aşağıdaki alanlar yer alır:</p>
+<ul>
+<li><strong>Toplantı Konusu:</strong> Toplantı başlığını ifade eder. Zorunludur.</li>
+<li><strong>Çalışma Alanı:</strong> Toplantının hangi çalışma alanında gerçekleşeceğini belirtir. Zorunludur.</li>
+<li><strong>Proje:</strong> Toplantının hangi proje için yapılacağını belirtir. Zorunludur.</li>
+<li><strong>Başlangıç Zamanı:</strong> Toplantının başlangıç tarih ve saatini ifade eder. Zorunludur.</li>
+<li><strong>Bitiş Zamanı:</strong> Toplantının bitiş tarih ve saatini ifade eder. Zorunludur.</li>
+<li><strong>Son Düzenlenme Tarihi:</strong> Toplantının güncellenebileceği son tarihi belirtir. Bu tarihten sonra toplantı güncellenemez. Zorunludur.</li>
+<li><strong>Online Link:</strong> Online toplantılar için kullanılacak bağlantıdır (Google Meet, Zoom vb.). İsteğe bağlıdır.</li>
+<li><strong>Durum:</strong> Toplantının katılım durumunu ifade eder. Zorunludur.</li>
+<li><strong>Toplantı Türü:</strong> Toplantının uzaktan, yüz yüze veya hibrit olacağını belirtir. Zorunludur.</li>
+<li><strong>Kilitli Mi?:</strong> Toplantının kilitli olup olmadığını gösterir.</li>
+</ul>
+<p>Periyot bilgileri, tekrar edilmesi istenen toplantılar için gerekli alanlardır. Periyot bilgisi girmek isteğe bağlıdır:</p>
+<ul>
+<li><strong>Periyot Adı</strong> Tekrar edecek toplantı için verilen isimdir.</li>
+<li><strong>Tekrar Gün Sayısı:</strong> Toplantının kaç günde bir tekrar edeceğini belirtir.</li>
+<li><strong>Periyot Başlangıç Tarihi:</strong> Toplantının tekrar etmeye başlayacağı tarihi ifade eder.</li>
+<li><strong>Periyot Bitiş Tarihi:</strong> Toplantının tekrarının sona ereceği tarihi ifade eder.</li>
+</ul>
+<h4>Lokasyon Bilgileri</h4>
+<p>Lokasyon bilgileri, yüz yüze veya hibrit toplantılar için kullanılır.</p>
+<ul>
+<li>Yüz yüze toplantılar için zorunludur</li>
+<li>Hibrit ve uzaktan toplantılar için isteğe bağlıdır</li>
+</ul>
+<p>Alanlar:</p>
+<ul>
+<li><strong>Lokasyon Adı:</strong> Toplantının gerçekleşeceği yer için verilen isimdir.</li>
+<li><strong>Adres:</strong> Toplantının yapılacağı adres bilgisidir.</li>
+<li><strong>Harita Linki:</strong> Konumun Google Maps vb. harita servislerindeki bağlantısıdır.</li>
+</ul>
+<h4>Katılımcılar</h4>
+<p>Katılımcılar, seçilen çalışma alanı ve projede yetkili olan kullanıcılar arasından seçilir.</p>
+<ul>
+<li>Uygun kullanıcılar Katılabilecek Kullanıcılar listesinde gösterilir</li>
+<li>&quot;+&quot; butonuna tıklanarak katılımcı eklenir</li>
+<li>&quot;x&quot; butonu ile katılımcı listeden çıkarılabilir</li>
+</ul>
+<h4>Başkan ve Raportör</h4>
+<ul>
+<li><strong>Başkan,</strong> toplantıyı yöneten kullanıcıdır</li>
+<li><strong>Raportör,</strong> toplantı notlarını tutan kullanıcıdır</li>
+</ul>
+<p>Bir toplantıda başkan ve raportör seçimi zorunludur.</p>
+<p>Toplantıyı oluşturan kullanıcı:</p>
+<ul>
+<li>Varsayılan olarak katılımcılara eklenir</li>
+<li>Varsayılan olarak başkan olarak atanır</li>
+<li>Kullanıcı isterse bu seçimleri değiştirebilir</li>
+</ul>
+<h4>Ziyaretçi Ekleme</h4>
+<p>Ziyaretçi Ekle butonu ile, çalışma alanı veya proje yetkisi olmayan kullanıcılar toplantıya eklenebilir.</p>
+<ul>
+<li>Ziyaretçinin e-posta adresi girilir</li>
+<li>Gerekirse “İsteğe Bağlı” seçeneği işaretlenir</li>
+<li>Kaydetildiğinde ziyaretçi katılımcı listesine eklenir</li>
+</ul>
+<h4>Toplantı Konuları</h4>
+<p>Toplantıda konuşulacak konular bu alanda tanımlanabilir.<br>Toplantı konusu eklemek zorunlu değildir ve daha sonra da eklenebilir.</p>
+<ul>
+<li><strong>Manuel Seçim:</strong> Toplantı konusu, seçilen proje, klasör veya dosya ile ilişkilendirilir.</li>
+<li><strong>Havuzdan Seçim:</strong> Daha önce dosya yöneticisinde oluşturulmuş toplantı konuları seçilebilir.</li>
+<li><strong>Açıklama:</strong> Toplantı konusuna ait açıklamayı ifade eder.</li>
+<li><strong>Notlar:</strong> Toplantı konusuna ait ek notları ifade eder.</li>
+</ul>
+<h4>Kaydetme</h4>
+<p>Kullanıcı formu eksiksiz ve doğru şekilde doldurup Kaydet butonuna tıkladığında:</p>
+<ul>
+<li>Toplantı oluşturulur</li>
+<li>Kullanıcı toplantılar sayfasına yönlendirilir</li>
+<li>Oluşturulan toplantı takvim üzerinde görüntülenir</li>
+</ul>
+<h2>3. Toplantı Detayları</h2>
+<p><img src="https://i.hizliresim.com/ka37o0c.png" alt="meeting_details"> Şekil 1.7 – Toplantı Detayları Ana Sayfası</p>
+<p>Kullanıcı, takvim veya toplantı listesi üzerinden bir toplantının Detaylar butonuna tıkladığında Toplantı Detayları sayfasına yönlendirilir.</p>
+<p>Bu sayfa, toplantıya ait tüm bilgilerin görüntülendiği ve yönetildiği ana ekrandır.<br>Toplantı detayları dört ayrı sekme altında sunulur:</p>
+<ul>
+<li><strong>Toplantı Bilgileri:</strong> Toplantının genel bilgilerini ve katılımcı listesini gösterir.</li>
+<li><strong>Toplantı Konuları:</strong> Toplantıda ele alınacak veya ele alınmış konuları listeler ve yönetmenizi sağlar.</li>
+<li><strong>Toplantı Kararları:</strong> Toplantı sonucunda alınan kararların takip edilmesini sağlar.</li>
+<li><strong>Toplantı Eylemleri:</strong> Toplantı kapsamında belirlenen görev ve sorumlulukların takibini sağlar.</li>
+</ul>
+<p>Her sekme, toplantının farklı bir yönünü yönetmenize olanak tanır ve birlikte kullanıldığında toplantı sürecinin uçtan uca kontrol edilmesini sağlar.</p>
+<h3>a. Toplantı Bilgileri</h3>
+<p><img src="https://i.hizliresim.com/ka37o0c.png" alt="meeting_details"> Şekil 1.8 – Toplantı Bilgileri Sekmesi</p>
+<p>Toplantı Bilgileri sekmesinde, toplantıya ait tüm temel bilgiler detaylı şekilde listelenir.<br>Bu sekme üzerinden toplantının mevcut durumu hızlıca incelenebilir ve toplantı bilgileri PDF formatında dışa aktarılabilir.</p>
+<p>Bu sekmede yer alan bilgiler şunlardır:</p>
+<ul>
+<li><strong>Konu:</strong> Toplantı başlığını ifade eder.</li>
+<li><strong>Proje:</strong> Toplantının hangi proje kapsamında gerçekleştirildiğini gösterir.</li>
+<li><strong>Başlangıç ve Bitiş Zamanı:</strong> Toplantının yapılacağı tarih ve saat aralığını belirtir.</li>
+<li><strong>Son Düzenlenme Tarihi:</strong> Toplantının güncellenebileceği son tarihi ifade eder. Bu tarih geçtikten sonra toplantı üzerinde değişiklik yapılamaz.</li>
+<li><strong>Toplantı Türü:</strong> Toplantının uzaktan, yüz yüze veya hibrit olarak gerçekleştirileceğini belirtir.</li>
+<li><strong>Konum:</strong> Yüz yüze veya hibrit toplantılar için toplantının yapılacağı adres bilgisini gösterir.</li>
+<li><strong>Online Link:</strong> Online toplantılar için kullanılan bağlantıyı ifade eder (Google Meet, Zoom vb.).</li>
+<li><strong>Başkan:</strong> Toplantıyı yöneten kullanıcıdır.</li>
+<li><strong>Raportör:</strong> Toplantı notlarını tutmakla sorumlu kullanıcıdır.</li>
+<li><strong>Durum:</strong> Toplantının mevcut durumunu belirtir. Alabileceği değerler: Açık, Kapalı, Beklemede, İptal Edildi, Tamamlandı.</li>
+<li><strong>Kilitli:</strong> Toplantının kilitli olup olmadığını gösterir. Kilitli toplantılar güncellenemez.</li>
+<li><strong>Periyot:</strong> Toplantının tekrar edip etmediğini, ediyorsa kaç günde bir tekrar ettiğini ve hangi tarihe kadar süreceğini belirtir.</li>
+<li><strong>Oluşturulma Tarihi:</strong> Toplantının ilk oluşturulduğu tarihi gösterir.</li>
+<li><strong>Son Güncelleme Tarihi:</strong> Toplantı üzerinde yapılan son değişikliğin tarihini ifade eder.</li>
+<li><strong>Katılımcılar:</strong> Toplantıya davet edilen tüm katılımcılar tabloda listelenir.</li>
+</ul>
+<h3>b. Toplantı Konuları</h3>
+<p><img src="https://i.hizliresim.com/tqihkuj.png" alt="meeting_topics"> Şekil 1.9 – Toplantı Konuları Sekmesi</p>
+<p>Toplantı Konuları sekmesinde, toplantıya ait tüm konular tablo halinde listelenir.<br>Bu sekme üzerinden kullanıcı;</p>
+<ul>
+<li>Yeni toplantı konusu ekleyebilir,</li>
+<li>Mevcut konular arasında arama yapabilir,</li>
+<li>Konuları güncelleyebilir,</li>
+<li>Konuları silebilir.</li>
+</ul>
+<p><img src="https://i.hizliresim.com/l25d1iq.png" alt="create_meeting_topic"> Şekil 1.10 – Toplantı Konusu Ekleme Ekranı</p>
+<p>Kullanıcı “Toplantı Konusu Ekle” butonuna tıkladığında bir menü açılır.<br>Bu menüde gerekli bilgiler doldurulup Kaydet butonuna basıldığında toplantı konusu oluşturulur ve tabloya eklenir.</p>
+<p>Formda yer alan alanlar ve dikkat edilmesi gerekenler:</p>
+<ul>
+<li><strong>Obje:</strong> Toplantı konusunun hangi varlıkla ilişkili olduğunu belirtir. Proje, projedeki klasör veya dosya seçilebilir. Zorunludur.</li>
+<li><strong>Açıklama:</strong> Toplantı konusunun detaylı açıklamasını ifade eder. Zorunludur.</li>
+<li><strong>Notlar:</strong> Toplantı konusuna ait ek notları ifade eder. İsteğe bağlıdır.</li>
+<li><strong>Tartışıldı:</strong> Toplantı konusunun toplantı sırasında tartışılıp tartışılmadığını belirtir.</li>
+</ul>
+<p>Tabloda yer alan bir toplantı konusunun Güncelleme butonuna tıklandığında, aynı menü seçilen konu bilgileri ile dolu şekilde açılır. Kullanıcı gerekli değişiklikleri yapıp kaydettiğinde, ilgili toplantı konusu ve tablo güncellenir.</p>
+<h3>c. Toplantı Kararları</h3>
+<p><img src="https://i.hizliresim.com/pjxn5zd.png" alt="meeting_decisions"> Şekil 1.11 – Toplantı Kararları Sekmesi</p>
+<p><strong>Toplantı Kararları</strong> sekmesinde, toplantıya ait tüm kararlar tablo halinde listelenir.<br>Bu sekme üzerinden kullanıcı;</p>
+<ul>
+<li>Yeni toplantı kararı ekleyebilir,</li>
+<li>Mevcut kararlar arasında arama yapabilir,</li>
+<li>Kararları güncelleyebilir,</li>
+<li>Kararları silebilir.</li>
+</ul>
+<p><img src="https://i.hizliresim.com/i6muazr.png" alt="create_meeting_decision"> Şekil 1.12 – Toplantı Kararı Ekleme Ekranı</p>
+<p>Kullanıcı “Toplantı Kararı Ekle” butonuna tıkladığında bir menü açılır.<br>Bu menüde gerekli bilgiler doldurulup Kaydet butonuna basıldığında toplantı kararı oluşturulur ve tabloya eklenir.<br>Formda yer alan alanlar ve dikkat edilmesi gerekenler:</p>
+<ul>
+<li><strong>Başlık:</strong> Toplantı kararının başlığını ifade eder. Zorunludur.</li>
+<li><strong>Obje:</strong> Toplantı kararının hangi varlıkla ilişkili olduğunu belirtir. Proje, projedeki klasör veya dosya seçilebilir.</li>
+<li><strong>Açıklama:</strong> Toplantı kararına ait açıklamayı ifade eder. İsteğe bağlıdır.</li>
+<li><strong>Takipçi:</strong> Toplantı kararının takipçisi olan kullanıcıyı ifade eder. Takipçi kullanıcı, kararın ilerleyişinden sorumludur.</li>
+</ul>
+<p>Tabloda yer alan bir toplantı kararının Güncelleme butonuna tıklandığında, aynı menü seçilen karar bilgileri ile dolu şekilde açılır. Kullanıcı gerekli değişiklikleri yapıp kaydettiğinde, ilgili toplantı kararı ve tablo güncellenir.</p>
+<h3>d. Toplantı Eylemleri</h3>
+<p><img src="https://i.hizliresim.com/s7nlrte.png" alt="meeting_action_items"> Şekil 1.13 – Toplantı Eylemleri Sekmesi</p>
+<p>Toplantı Eylemleri sekmesinde, toplantıya ait tüm eylemler tablo halinde listelenir.<br>Bu sekme üzerinden kullanıcı;</p>
+<ul>
+<li>Yeni toplantı eylemi ekleyebilir,</li>
+<li>Mevcut eylemler arasında arama yapabilir,</li>
+<li>Eylemleri güncelleyebilir,</li>
+<li>Eylemleri silebilir.</li>
+</ul>
+<p><img src="https://i.hizliresim.com/tvshkwx.png" alt="create_meeting_action_item"> Şekil 1.14 – Toplantı Eylemi Ekleme Ekranı</p>
+<p>Kullanıcı “Toplantı Eylemi Ekle” butonuna tıkladığında bir menü açılır.<br>Bu menüde gerekli bilgiler doldurulup Kaydet butonuna basıldığında toplantı eylemi oluşturulur ve tabloya eklenir.</p>
+<p>Formda yer alan alanlar ve dikkat edilmesi gerekenler:</p>
+<ul>
+<li><strong>Sorumlu:</strong> Toplantı eyleminden sorumlu olan kullanıcıyı ifade eder. Zorunludur.</li>
+<li><strong>Bitiş Tarihi:</strong> Toplantı eyleminin tamamlanması gereken tarihi ifade eder.Zorunludur.</li>
+<li><strong>Obje:</strong> Toplantı eyleminin hangi varlıkla ilişkili olduğunu belirtir. Proje, projedeki klasör veya dosya seçilebilir.</li>
+<li><strong>Notlar:</strong> Toplantı eylemine ait açıklama ve notları ifade eder. İsteğe bağlıdır.</li>
+</ul>
+<p>Hatırlatma ayarları, oluşturulan toplantı eylemi için sorumlu kullanıcıya belirli aralıklarla hatırlatma gönderilmesini sağlar. Bu alanların doldurulması isteğe bağlıdır.</p>
+<ul>
+<li><strong>Hatırlatma Adı:</strong> Hatırlatma için verilecek adı ifade eder.</li>
+<li><strong>Tekrar Sıklığı:</strong> Hatırlatmanın kaç günde bir tekrar edeceğini belirtir.</li>
+<li><strong>Başlangıç Tarihi:</strong> Hatırlatmanın başlayacağı tarihi ifade eder. Bu tarihten itibaren hatırlatma gönderilmeye başlanır.</li>
+<li><strong>Bitiş Tarihi:</strong> Hatırlatmanın sona ereceği tarihi ifade eder. Bu tarihten sonra hatırlatma gönderilmez.</li>
+</ul>
+<p>Tabloda yer alan bir toplantı eyleminin Güncelleme butonuna tıklandığında, aynı menü seçilen eylem bilgileri ile dolu şekilde açılır. Kullanıcı gerekli değişiklikleri yapıp kaydettiğinde, ilgili toplantı eylemi ve tablo güncellenir.</p>
+<hr>
+<h2>4. Toplantı Güncelleme</h2>
+<p><img src="https://i.hizliresim.com/qe8glsl.png" alt="update_meeting"> Şekil 1.15 – Toplantı Güncelleme Ekranı</p>
+<p>Toplantı Güncelleme sayfası açıldığında, toplantı oluşturma formu güncellenecek toplantının mevcut bilgileri ile dolu halde gelir. Bu sayfada toplantı oluşturma ekranındaki tüm kurallar geçerlidir.</p>
+<p>Kullanıcı, toplantı bilgilerini güncelleyebilir; ayrıca toplantıya karar ve eylem ekleyebilir.</p>
+<p>Form başarıyla kaydedildiğinde kullanıcı toplantılar sayfasına yönlendirilir ve güncellenen toplantı takvimde listelenir.</p>
+<hr>
+<h2>5. Google Takvim ve Meet Entegrasyonu</h2>
+<p><img src="https://i.hizliresim.com/rwzl5xd.png" alt="create_meeting"> Şekil 1.16 – Google Takvim Bağlantı Yönetimi<br><img src="https://i.hizliresim.com/nl4mldq.png" alt="create_meeting"> Şekil 1.17 – Google Takvim Görüntüsü</p>
+<p>Sistem, toplantıların dış takvimlerle senkronize çalışabilmesi için Google Takvim entegrasyonuna tam destek verir. Kullanıcı, ayarlar menüsü üzerinden Google hesabını sisteme bağlayabilir.</p>
+<p>Bağlantı Yönetimi: Takvim bağlantısı kurulduğunda, kullanıcı görselde (Şekil 1.16) görüldüğü gibi bağlantı durumunu izleyebilir ve dilediğinde hesabı değiştirebilir.</p>
+<p>Otomatik Link Oluşturma: &quot;Google Meet Linki Oluştur&quot; seçeneği aktif edildiğinde, oluşturulan veya güncellenen her toplantı için sistem tarafından otomatik bir video konferans linki üretilir.</p>
+<hr>
+<h2>6. Toplantı Detayları ve PDF Raporlama</h2>
+<p><img src="https://i.hizliresim.com/6xxpa4s.png" alt="detail_meeting"> Şekil 1.19 – Toplantı Detayları Ekranı</p>
+<p>Toplantı başarıyla oluşturulduktan veya güncellendikten sonra kullanıcı, toplantıya ait tüm verileri &quot;Toplantı Detayları&quot; ekranı üzerinden inceleyebilir. Bu ekran; toplantı bilgileri, konuları, kararları ve eylemleri içeren sekmeli bir yapıya sahiptir.</p>
+<p>Detaylı İzleme: Kullanıcı; toplantı türü, online link (Google Meet), katılımcı listesi ve katılım durumları gibi kritik bilgileri bu ekrandan takip edebilir.</p>
+<p>Dışa Aktarma: Ekranın sağ üst köşesinde bulunan &quot;PDF Olarak Dışa Aktar&quot; butonu (Şekil 1.19), mevcut toplantı tutanağının resmi bir döküman haline getirilmesini sağlar.</p>
+<p><img src="https://i.hizliresim.com/jfxnozi.png" alt="detail_meeting"> Şekil 1.20 – Toplantı Tutanağı PDF Çıktısı</p>
+<p>&quot;PDF Olarak Dışa Aktar&quot; fonksiyonu çalıştırıldığında, sistem otomatik olarak profesyonel bir toplantı tutanağı oluşturur (Şekil 1.20). PDF raporu şu bölümlerden oluşur:</p>
+<p>Başlık ve Özet Bilgiler: Toplantı adı, proje kodu, tarih, saat ve lokasyon bilgileri.</p>
+<p>Katılımcı Tablosu: Toplantıya davet edilenlerin isimleri, e-posta adresleri ve rollerini içeren liste.</p>
+<p>Konular (Topics): Toplantı esnasında ele alınan maddeler ve alınan notlar.</p>
+<p>Kararlar ve Eylemler (Decisions &amp; Action Items): Alınan stratejik kararlar ile bu kararlar doğrultusunda atanan görevler, sorumlular ve termin tarihlerini içeren detaylı tablolar.</p>
+</div>
+    </div>
+  </main>
+  <aside class="toc" id="toc">
+    <span class="toc-title">Bu Sayfada</span>
+  </aside>
+</div>
+<footer class="ft">
+  <span>Simeranya Dijital Teknoloji &mdash; <a href="https://simeranya.com.tr" target="_blank">simeranya.com.tr</a></span>
+</footer>
+<script>
+(function(){
+  function toggleNav(){var s=document.querySelector('.sb'),o=document.getElementById('sb-ov');s.classList.toggle('mob-open');o.classList.toggle('open');}
+  window.toggleNav=toggleNav;
+  document.addEventListener('click',function(e){var vsw=document.querySelector('.ver-sw');if(vsw&&!vsw.contains(e.target))vsw.classList.remove('open');});
+  document.querySelectorAll('.si').forEach(function(a){a.addEventListener('click',function(){if(window.innerWidth<=768){toggleNav();}});});
+  var TC={added:'#4caf50',changed:'#ff9800',fixed:'#42a5f5',removed:'#ef5350',security:'#ab47bc'};
+  var TL={"added":"Eklendi","changed":"Değiştirildi","fixed":"Düzeltildi","removed":"Kaldırıldı","security":"Güvenlik"};
+  var VD={"versions":[],"hcl":{}};
+  function selectVer(v){
+    var vi=VD.versions.findIndex(function(x){return x.version===v;});
+    if(vi===-1)return;
+    var isLatest=(vi===0);
+    var badge=document.querySelector('.ver-badge');
+    if(badge)badge.textContent=(isLatest?'Latest':'v'+v)+' ▾';
+    document.querySelectorAll('.ver-opt').forEach(function(o){o.classList.toggle('ver-cur',o.dataset.ver===v);});
+    try{var sp=new URLSearchParams(location.search);sp.set('ver',v);history.replaceState({},'',(location.pathname||'.')+'?'+sp.toString());}catch(e){}
+    document.querySelectorAll('.si[href]').forEach(function(a){var h=a.getAttribute('href');if(!h||h==='#')return;var qi=h.indexOf('?');var hi=h.indexOf('#');var base=qi>=0?h.slice(0,qi):hi>=0?h.slice(0,hi):h;var hash=hi>=0?h.slice(hi):'';var qsp=new URLSearchParams(qi>=0?h.slice(qi+1,hi>=0?hi:undefined):'');qsp.set('ver',v);a.setAttribute('href',base+'?'+qsp.toString()+hash);});
+    // Changelog page: scroll to version block instead of annotation/filter logic
+    if(document.querySelector('.cl-ver')){
+      if(typeof clS==='function')clS(v);
+      else{var slug=v.replace(/[^a-z0-9]/gi,'-');var t=document.getElementById('ver-'+slug);if(t)t.scrollIntoView({behavior:'smooth',block:'start'});}
+      return;
+    }
+    var mc=document.getElementById('md-content');
+    if(mc){Array.from(mc.children).forEach(function(el){el.style.display='';});}
+    document.querySelectorAll('.ver-ann').forEach(function(ann){
+      var ht=ann.dataset.h;var changes=VD.hcl[ht]||[];
+      while(ann.firstChild)ann.removeChild(ann.firstChild);
+      var toRender;
+      if(isLatest){
+        toRender=changes.map(function(c){return{c:c,future:false,past:false};});
+      } else {
+        var cur=changes.filter(function(c){return c.version===v;}).map(function(c){return{c:c,future:false,past:false};});
+        var fut=changes.filter(function(c){var ci=VD.versions.findIndex(function(x){return x.version===c.version;});return ci<vi;}).map(function(c){return{c:c,future:true,past:false};});
+        toRender=cur.concat(fut);
+        if(toRender.length===0){
+          toRender=changes.filter(function(c){var ci=VD.versions.findIndex(function(x){return x.version===c.version;});return ci>vi;}).map(function(c){return{c:c,future:false,past:true};});
+        }
+      }
+      if(toRender.length===0){ann.style.display='none';return;}
+      ann.style.display='';
+      var acc=document.createElement('div');
+      acc.setAttribute('style','border:1px solid var(--bo);border-radius:6px;overflow:hidden;margin:.1rem 0 .8rem;');
+      var hdr=document.createElement('div');
+      hdr.setAttribute('style','padding:.3rem .7rem;background:var(--S);cursor:pointer;user-select:none;display:flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;color:var(--mu);');
+      var arrow=document.createElement('span');arrow.textContent='▸';
+      var lbl=document.createElement('span');lbl.textContent='Changelog';
+      var cntSpan=document.createElement('span');
+      cntSpan.setAttribute('style','margin-left:auto;font-size:.65rem;font-weight:400;opacity:.7;');
+      cntSpan.textContent=toRender.length+' değişiklik';
+      hdr.appendChild(arrow);hdr.appendChild(lbl);hdr.appendChild(cntSpan);
+      var body=document.createElement('div');
+      body.setAttribute('style','padding:.4rem .7rem;display:none;flex-direction:column;gap:4px;');
+      hdr.onclick=function(){var op=body.style.display!=='none';body.style.display=op?'none':'flex';arrow.textContent=op?'▸':'▾';};
+      toRender.forEach(function(item){
+        var c=item.c;var color=TC[c.type]||'#888';
+        var row=document.createElement('div');
+        row.setAttribute('style','display:flex;align-items:baseline;gap:6px;font-size:.8rem;'+(item.future||item.past?'opacity:.55;':''));
+        if(item.future){
+          var fb=document.createElement('span');
+          fb.setAttribute('style','font-family:monospace;font-size:.62rem;padding:1px 5px;border-radius:5px;border:1px dashed #9ca3af;color:var(--mu);white-space:nowrap;flex-shrink:0;');
+          fb.textContent='⇨ v'+c.version+(c.date?' · '+c.date:'');row.appendChild(fb);
+        } else {
+          var vs=document.createElement('span');
+          vs.setAttribute('style','font-family:monospace;font-size:.68rem;color:var(--mu);flex-shrink:0;white-space:nowrap;');
+          vs.textContent='v'+c.version+(c.date?' · '+c.date:'');row.appendChild(vs);
+        }
+        var bdg=document.createElement('span');
+        bdg.setAttribute('style','font-size:.62rem;padding:1px 6px;border-radius:8px;background:'+color+'18;border:1px '+(item.future?'dashed':'solid')+' '+color+'50;color:'+color+';white-space:nowrap;flex-shrink:0;');
+        bdg.textContent=TL[c.type]||c.type;row.appendChild(bdg);
+        var txt=document.createElement('span');
+        txt.setAttribute('style','color:var(--M);font-size:.8rem;');
+        txt.textContent=c.text;row.appendChild(txt);
+        body.appendChild(row);
+      });
+      acc.appendChild(hdr);acc.appendChild(body);ann.appendChild(acc);
+    });
+    if(!mc||isLatest)return;
+    Array.from(mc.querySelectorAll('h1,h2,h3,h4')).forEach(function(h){
+      var ht=h.textContent.trim();var changes=VD.hcl[ht]||[];
+      var existed=changes.length===0||changes.some(function(c){var ci=VD.versions.findIndex(function(x){return x.version===c.version;});return ci>=vi;});
+      h.style.display=existed?'':'none';
+      var sib=h.nextElementSibling;
+      if(sib&&sib.classList&&sib.classList.contains('ver-ann')){if(!existed)sib.style.display='none';sib=sib.nextElementSibling;}
+      var lvl=parseInt(h.tagName[1]);
+      while(sib){if(sib.tagName&&/^H[1-4]$/.test(sib.tagName)&&parseInt(sib.tagName[1])<=lvl)break;sib.style.display=existed?'':'none';sib=sib.nextElementSibling;}
+    });
+  }
+  window.selectVer=selectVer;
+  if(VD.versions.length>0&&!document.querySelector('.cl-ver')){
+    var initVer=new URLSearchParams(location.search).get('ver');
+    var startVer=initVer&&VD.versions.find(function(x){return x.version===initVer;})?initVer:VD.versions[0].version;
+    selectVer(startVer);
+  }
+  var toc=document.getElementById('toc');
+  var md=document.getElementById('md-content');
+  if(!toc||!md)return;
+  var headings=md.querySelectorAll('h1,h2,h3,h4,h5,h6');
+  if(headings.length<2){toc.style.display='none';document.querySelector('.ca').style.maxWidth='calc(100% - var(--sw))';return;}
+  var links=[];
+  headings.forEach(function(h,i){
+    if(!h.id){h.id='heading-'+i;}
+    var a=document.createElement('a');
+    a.href='#'+h.id;
+    a.textContent=h.textContent;
+    a.className=h.tagName.toLowerCase();
+    a.dataset.target=h.id;
+    toc.appendChild(a);
+    links.push({el:a,target:h});
+  });
+  function updateActive(){
+    var scrollY=window.scrollY||window.pageYOffset;
+    var current=null;
+    links.forEach(function(l){
+      if(l.target.getBoundingClientRect().top<=100)current=l;
+    });
+    links.forEach(function(l){l.el.classList.remove('active');});
+    if(current)current.el.classList.add('active');
+  }
+  window.addEventListener('scroll',updateActive,{passive:true});
+  updateActive();
+})();
+</script>
+</body>
+</html>
